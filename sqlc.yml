@@ -1,0 +1,19 @@
+version: "2"
+sql:
+  - engine: "postgresql"
+    queries: "./db/query/"
+    schema: "./db/schema.sql"
+    gen:
+      go:
+        package: "db"
+        out: "./db/sqlc"
+        sql_package: "pgx/v5"
+
+overrides:
+  go:
+    overrides:
+      - db_type: "pg_catalog.timestamp"
+        go_type: "time.Time"
+
+      - db_type: "pg_catalog.text"
+        go_type: "string"

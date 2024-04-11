@@ -1,0 +1,49 @@
+package page
+
+import "github.com/corentings/chessbet/app/views/layout"
+import "github.com/corentings/chessbet/domain"
+
+templ Hero() {
+	<section>
+		<h1>Chess Bets</h1>
+		<p>Bet for your favorite chess player and get moneys</p>
+		<span>Made by <a href="https://corentings.dev">CorentinGS</a></span>
+	</section>
+
+	<section>
+		<h2>How it works</h2>
+		<p>Choose a player, bet on him, and if he wins, you win too!</p>
+	</section>
+
+	<section>
+		<h2>Leaderboard</h2>
+		<p>Check the leaderboard to see who is the best bettor!</p>
+	</section>
+
+	<section>
+		<button hx-get="/users/discord/login">Start betting</button>
+	</section>
+}
+
+templ Index() {
+	<style>
+	me {
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		align-items: center;
+		text-align: center;
+	}
+	</style>
+	@Hero()
+}
+
+templ HomePage( title,
+    username string,
+    fromProtected bool,
+	nonce domain.Nonce,
+    cmp templ.Component) {
+	@layout.Base(title, username, fromProtected, nonce) {
+		@cmp
+	}
+}
