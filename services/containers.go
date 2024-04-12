@@ -8,6 +8,7 @@ import (
 
 type ServiceContainer struct {
 	userHandler handlers.UserController
+	jwtHandler  handlers.JwtMiddleware
 }
 
 var (
@@ -17,15 +18,17 @@ var (
 
 func DefaultServiceContainer() *ServiceContainer {
 	imageHandler := InitializeUserHandler()
+	jwtHandler := InitializeJwtMiddleware()
 
-	return NewServiceContainer(imageHandler)
+	return NewServiceContainer(imageHandler, jwtHandler)
 }
 
-func NewServiceContainer(userHandler handlers.UserController,
+func NewServiceContainer(userHandler handlers.UserController, jwtHandler handlers.JwtMiddleware,
 ) *ServiceContainer {
 	once.Do(func() {
 		container = &ServiceContainer{
 			userHandler: userHandler,
+			jwtHandler:  jwtHandler,
 		}
 	})
 	return container
@@ -33,4 +36,8 @@ func NewServiceContainer(userHandler handlers.UserController,
 
 func (sc *ServiceContainer) UserHandler() handlers.UserController {
 	return sc.userHandler
+}
+
+func (sc *ServiceContainer) JwtMiddleware() handlers.JwtMiddleware {
+	return sc.jwtHandler
 }

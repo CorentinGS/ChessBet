@@ -79,9 +79,7 @@ func setup(cfg *config.Config) {
 
 func setupJwt(cfg *config.Config) {
 	// Parse the keys
-	if err := crypto.GetKeyManagerInstance().ParseEd25519Key(); err != nil {
-		log.Fatal("❌ Error parsing keys", slog.Any("error", err))
-	}
+	crypto.GetKeyManagerInstance()
 
 	// Create the JWT instance
 	jwtInstance := jwt.NewJWTInstance(cfg.Auth.JWTHeaderLen, cfg.Auth.JWTExpiration,

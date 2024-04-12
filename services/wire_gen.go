@@ -20,3 +20,10 @@ func InitializeUserHandler() handlers.UserController {
 	userController := handlers.NewUserController(iUseCase)
 	return userController
 }
+
+func InitializeJwtMiddleware() handlers.JwtMiddleware {
+	pool := infrastructures.GetPgxConn()
+	iUseCase := user.NewUseCase(pool)
+	jwtMiddleware := handlers.NewJwtMiddleware(iUseCase)
+	return jwtMiddleware
+}

@@ -16,7 +16,15 @@ func NewPageController() *PageController {
 func (p *PageController) GetIndex(c echo.Context) error {
 	hero := page.Index()
 
-	index := page.HomePage("ChessBet", "", false, GetNonce(c), hero)
+	index := page.IndexPage("ChessBet", "", false, GetNonce(c), hero)
 
 	return Render(c, http.StatusOK, index)
+}
+
+func (p *PageController) GetHome(c echo.Context) error {
+	hero := page.Home()
+
+	home := page.HomePage("ChessBet", "Home", true, GetNonce(c), hero)
+
+	return Render(c, http.StatusOK, home)
 }

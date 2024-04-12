@@ -109,5 +109,5 @@ func (uc *UserController) DiscordCallback(c echo.Context) error {
 	c.SetCookie(cookie)
 
 	// Redirect to the home page
-	return c.Redirect(http.StatusSeeOther, "/")
+	return c.Redirect(http.StatusSeeOther, "/app")
 }

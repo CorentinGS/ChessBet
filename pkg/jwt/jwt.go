@@ -2,7 +2,7 @@ package jwt
 
 import (
 	"context"
-	"strings"
+	"log/slog"
 	"sync"
 	"time"
 
@@ -90,7 +90,6 @@ func (Instance) VerifyToken(token *jwt.Token) (int32, error) {
 		if err != nil {
 			return 0, err
 		}
-
 		return userID, nil
 	}
 
@@ -118,31 +117,15 @@ func (Instance) GetExpirationTime(token *jwt.Token) int64 {
 	return int64(claims["exp"].(float64))
 }
 
-// ExtractToken function to extract token from header.
-func (instance Instance) ExtractToken(token string) string {
-	// Normally Authorization HTTP header.
-	onlyToken := strings.Split(token, " ") // Split token.
-	if len(onlyToken) == instance.HeaderLen {
-		return onlyToken[1] // Return only token.
-	}
-	return "" // Return empty string.
-}
-
 // GetConnectedUserID gets the user id from a jwt token.
-func (instance Instance) GetConnectedUserID(ctx context.Context, tokenHeader string) (int32, error) {
-	if tokenHeader == "" {
-		return 0, errors.New("empty token")
-	}
-
-	// Get the token from the Authorization header.
-	tokenString := instance.ExtractToken(tokenHeader)
-
+func (instance Instance) GetConnectedUserID(ctx context.Context, tokenString string) (int32, error) {
 	if tokenString == "" {
 		return 0, errors.New("empty token")
 	}
 
 	token, err := instance.GetToken(ctx, tokenString)
 	if err != nil {
+		slog.Warn("Invalid token", slog.String("token", tokenString), slog.String("error", err.Error()))
 		return 0, errors.New("invalid token")
 	}
 
@@ -153,6 +136,7 @@ func (instance Instance) GetConnectedUserID(ctx context.Context, tokenHeader str
 	}
 
 	if userID == 0 {
+		slog.Warn("Invalid token, userID==0", slog.String("token", tokenString))
 		return 0, errors.New("invalid token")
 	}
 

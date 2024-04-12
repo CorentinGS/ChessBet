@@ -24,9 +24,15 @@ func (i *InstanceSingleton) registerRoutes(e *echo.Echo) {
 	serviceContainer := services.DefaultServiceContainer()
 	user := serviceContainer.UserHandler()
 	pageController := handlers.NewPageController()
+	jwtMiddleware := serviceContainer.JwtMiddleware()
 
 	// Page routes
 	e.GET("/", pageController.GetIndex)
+
+	connectedGroup := e.Group("/app")
+
+	connectedGroup.Use(jwtMiddleware.AuthorizeUser)
+	connectedGroup.GET("", pageController.GetHome)
 
 	// Health check
 	e.GET("/health", func(c echo.Context) error {
@@ -39,4 +45,5 @@ func (i *InstanceSingleton) registerRoutes(e *echo.Echo) {
 	// User routes
 	usersRoutes.GET("/discord/login", user.DiscordLogin)
 	usersRoutes.GET("/discord/callback", user.DiscordCallback)
+
 }

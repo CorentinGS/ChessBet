@@ -14,3 +14,8 @@ func InitializeUserHandler() handlers.UserController {
 	wire.Build(handlers.NewUserController, user.NewUseCase, infrastructures.GetPgxConn)
 	return handlers.UserController{}
 }
+
+func InitializeJwtMiddleware() handlers.JwtMiddleware {
+	wire.Build(handlers.NewJwtMiddleware, user.NewUseCase, infrastructures.GetPgxConn)
+	return handlers.JwtMiddleware{}
+}
