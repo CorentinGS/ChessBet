@@ -45,5 +45,4 @@ func (i *InstanceSingleton) registerRoutes(e *echo.Echo) {
 	// User routes
 	usersRoutes.GET("/discord/login", user.DiscordLogin)
 	usersRoutes.GET("/discord/callback", user.DiscordCallback)
-
 }
