@@ -1,7 +1,10 @@
 package handlers
 
 import (
+	"net/http"
+
 	"github.com/a-h/templ"
+	"github.com/corentings/chessbet/app/views/page"
 	"github.com/corentings/chessbet/domain"
 	"github.com/labstack/echo/v4"
 )
@@ -18,4 +21,20 @@ func Redirect(c echo.Context, path string, statusCode int) error {
 
 func GetNonce(c echo.Context) domain.Nonce {
 	return c.Get("nonce").(domain.Nonce)
+}
+
+func RedirectToErrorPage(c echo.Context, errorCode int) error {
+	pageToReturn := page.InternalServerError()
+	switch errorCode {
+	case http.StatusUnauthorized:
+		pageToReturn = page.NotAuthorized()
+	case http.StatusNotFound:
+		pageToReturn = page.NotFound()
+	case http.StatusInternalServerError:
+		pageToReturn = page.InternalServerError()
+	}
+
+	errorPage := page.ErrorPage("ChessBet", true, GetNonce(c), pageToReturn)
+
+	return Render(c, errorCode, errorPage)
 }

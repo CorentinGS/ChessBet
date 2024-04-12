@@ -3,7 +3,7 @@ package page
 import "github.com/corentings/chessbet/app/views/layout"
 import "github.com/corentings/chessbet/domain"
 
-templ Home() {
+templ Home(username string) {
 	<style>
 	me {
 		display: flex;
@@ -14,19 +14,18 @@ templ Home() {
 	}
 	</style>
 	<me>
-		<h1>Welcome to ChessBet</h1>
+		<h1>Welcome to ChessBet {username}</h1>
 		<p>ChessBet is a platform where you can bet on chess games.</p>
 		<p>It is a fun way to enjoy chess games and make some money.</p>
 		<p>Sign up now and start betting!</p>
                             </me>
 }
 
-templ HomePage(title,
-    username string,
+templ HomePage(title string,
     fromProtected bool,
 	nonce domain.Nonce,
     cmp templ.Component) {
-	@layout.Base(title, username, fromProtected, nonce) {
+	@layout.Base(title, fromProtected, nonce) {
 		@cmp
 	}
 }

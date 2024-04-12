@@ -2,10 +2,8 @@ package handlers
 
 import (
 	"errors"
-	"log/slog"
 	"net/http"
 
-	"github.com/corentings/chessbet/app/views/page"
 	db "github.com/corentings/chessbet/db/sqlc"
 	"github.com/corentings/chessbet/domain"
 	"github.com/corentings/chessbet/pkg/jwt"
@@ -34,27 +32,19 @@ func (j *JwtMiddleware) IsConnectedMiddleware(_ domain.Permission, next echo.Han
 		// get the token from the cookie
 		cookie, err := c.Cookie("session_token")
 		if err != nil {
-			slog.Error("Error getting cookie", slog.String("error", err.Error()))
-			errorPage := page.ErrorPage("ChessBet", "", true, GetNonce(c), page.NotAuthorized())
-			return Render(c, http.StatusUnauthorized, errorPage)
+			_ = RedirectToErrorPage(c, http.StatusUnauthorized)
 		}
 
 		token := cookie.Value
 
-		slog.Debug("Token", slog.String("token", token))
-
 		userID, err := jwt.GetJwtInstance().GetJwt().GetConnectedUserID(c.Request().Context(), token)
 		if err != nil {
-			slog.Error("Error getting user ID from token", slog.String("error", err.Error()))
-			errorPage := page.ErrorPage("ChessBet", "", true, GetNonce(c), page.NotAuthorized())
-			return Render(c, http.StatusUnauthorized, errorPage)
+			_ = RedirectToErrorPage(c, http.StatusUnauthorized)
 		}
 
 		userModel, err := j.IUseCase.GetUserByID(c.Request().Context(), userID)
 		if err != nil {
-			slog.Error("Error getting user from ID", slog.String("error", err.Error()))
-			errorPage := page.ErrorPage("ChessBet", "", true, GetNonce(c), page.NotAuthorized())
-			return Render(c, http.StatusUnauthorized, errorPage)
+			_ = RedirectToErrorPage(c, http.StatusUnauthorized)
 		}
 
 		// Set userModel in locals

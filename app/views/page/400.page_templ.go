@@ -133,8 +133,7 @@ func BadRequest() templ.Component {
 	})
 }
 
-func ErrorPage(title,
-	username string,
+func ErrorPage(title string,
 	fromProtected bool,
 	nonce domain.Nonce,
 	cmp templ.Component) templ.Component {
@@ -165,7 +164,7 @@ func ErrorPage(title,
 			}
 			return templ_7745c5c3_Err
 		})
-		templ_7745c5c3_Err = layout.Base(title, username, fromProtected, nonce).Render(templ.WithChildren(ctx, templ_7745c5c3_Var7), templ_7745c5c3_Buffer)
+		templ_7745c5c3_Err = layout.Base(title, fromProtected, nonce).Render(templ.WithChildren(ctx, templ_7745c5c3_Var7), templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
