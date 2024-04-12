@@ -37,7 +37,6 @@ func (uc *UserController) DiscordLogin(c echo.Context) error {
 	redirectURL := oauth.GetDiscordURL() + "&state=" + state
 
 	// Add the state to the cache
-
 	stateCache.Store(state, true)
 
 	slog.Info("Redirecting to Discord login", slog.String("redirectURL", redirectURL))
@@ -51,7 +50,7 @@ func (uc *UserController) DiscordCallback(c echo.Context) error {
 	// Check if the state is in the cache
 	if _, ok := stateCache.Load(state); !ok {
 		slog.Warn("State not found in cache", slog.String("state", state))
-		return c.NoContent(http.StatusUnauthorized)
+		_ = RedirectToErrorPage(c, http.StatusInternalServerError)
 	}
 
 	// Delete the state from the cache
@@ -64,19 +63,19 @@ func (uc *UserController) DiscordCallback(c echo.Context) error {
 	accessToken, err := oauth.GetDiscordAccessToken(c.Request().Context(), code)
 	if err != nil {
 		slog.Error("Failed to get access token from Discord", slog.String("error", err.Error()), slog.String("code", code))
-		return c.NoContent(http.StatusInternalServerError)
+		_ = RedirectToErrorPage(c, http.StatusInternalServerError)
 	}
 
 	if accessToken == "" {
 		slog.Error("Access token is empty")
-		return c.NoContent(http.StatusInternalServerError)
+		_ = RedirectToErrorPage(c, http.StatusInternalServerError)
 	}
 
 	// Get the user info from Discord
 	userInfo, err := oauth.GetDiscordData(c.Request().Context(), accessToken)
 	if err != nil {
 		slog.Error("Failed to get user info from Discord", slog.String("error", err.Error()))
-		return c.NoContent(http.StatusInternalServerError)
+		_ = RedirectToErrorPage(c, http.StatusInternalServerError)
 	}
 
 	var discordUser oauth.DiscordLogin
@@ -85,7 +84,7 @@ func (uc *UserController) DiscordCallback(c echo.Context) error {
 	err = json.Unmarshal([]byte(userInfo), &discordUser)
 	if err != nil {
 		slog.Error("Failed to unmarshal user info", slog.String("error", err.Error()))
-		return c.NoContent(http.StatusInternalServerError)
+		_ = RedirectToErrorPage(c, http.StatusInternalServerError)
 	}
 
 	slog.Debug("Discord user info", slog.String("userInfo", userInfo))
@@ -94,7 +93,7 @@ func (uc *UserController) DiscordCallback(c echo.Context) error {
 	token, err := uc.useCase.LoginOauthDiscord(c.Request().Context(), discordUser)
 	if err != nil {
 		slog.Error("Failed to login user", slog.String("error", err.Error()))
-		return c.NoContent(http.StatusInternalServerError)
+		_ = RedirectToErrorPage(c, http.StatusInternalServerError)
 	}
 
 	cookie := &http.Cookie{

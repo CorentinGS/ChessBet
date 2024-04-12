@@ -84,12 +84,11 @@ templ BadRequest() {
     <button> <a href="/">Go Back </a></button>
 }
 
-templ ErrorPage(title,
-    username string,
+templ ErrorPage(title string,
     fromProtected bool,
 	nonce domain.Nonce,
     cmp templ.Component) {
-	@layout.Base(title, username, fromProtected, nonce) {
+	@layout.Base(title, fromProtected, nonce) {
 		@cmp
 	}
 }

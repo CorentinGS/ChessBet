@@ -12,7 +12,7 @@ import "bytes"
 
 import "github.com/corentings/chessbet/domain"
 
-func Base(title, username string, fromProtected bool, nonce domain.Nonce) templ.Component {
+func Base(title string, fromProtected bool, nonce domain.Nonce) templ.Component {
 	return templ.ComponentFunc(func(ctx context.Context, templ_7745c5c3_W io.Writer) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templ_7745c5c3_W.(*bytes.Buffer)
 		if !templ_7745c5c3_IsBuffer {

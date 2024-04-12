@@ -38,12 +38,11 @@ templ Index() {
 	@Hero()
 }
 
-templ IndexPage( title,
-    username string,
+templ IndexPage( title string,
     fromProtected bool,
 	nonce domain.Nonce,
     cmp templ.Component) {
-	@layout.Base(title, username, fromProtected, nonce) {
+	@layout.Base(title, fromProtected, nonce) {
 		@cmp
 	}
 }
