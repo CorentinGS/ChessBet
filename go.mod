@@ -3,7 +3,7 @@ module github.com/corentings/chessbet
 go 1.22.1
 
 require (
-	github.com/a-h/templ v0.2.648
+	github.com/a-h/templ v0.2.663
 	github.com/go-playground/validator/v10 v10.19.0
 	github.com/google/wire v0.6.0
 	github.com/labstack/echo/v4 v4.11.4
@@ -16,7 +16,7 @@ require (
 	github.com/golang-jwt/jwt v3.2.2+incompatible // indirect
 	github.com/jackc/puddle/v2 v2.2.1 // indirect
 	github.com/rogpeppe/go-internal v1.12.0 // indirect
-	golang.org/x/exp v0.0.0-20240404231335-c0f41cb1a7a0 // indirect
+	golang.org/x/exp v0.0.0-20240409090435-93d18d7e34b8 // indirect
 	golang.org/x/sync v0.7.0 // indirect
 	golang.org/x/time v0.5.0 // indirect
 )
