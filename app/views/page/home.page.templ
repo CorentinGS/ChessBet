@@ -3,6 +3,7 @@ package page
 import "github.com/corentings/chessbet/app/views/layout"
 import "github.com/corentings/chessbet/domain"
 import 	db "github.com/corentings/chessbet/db/sqlc"
+import "strconv"
 
 
 templ Home(username string) {
@@ -17,9 +18,7 @@ templ Home(username string) {
 	</style>
 	<me>
 		<h1>Welcome to ChessBet {username}</h1>
-		<p>ChessBet is a platform where you can bet on chess games.</p>
-		<p>It is a fun way to enjoy chess games and make some money.</p>
-		<p>Sign up now and start betting!</p>
+		<p>ChessBet is a platform where you can bet on chess games.</p>	
     </me>
 
 	<div hx-get="/tournaments/in-progress" hx-trigger="revealed" hx-swap="outerHTML"></div>
@@ -38,7 +37,7 @@ templ Gallery(tournaments []db.Tournament) {
 	</style>
 
 	for _, tournament := range tournaments {
-		<h2>{tournament.Name}</h2>
+		<h3><a href={templ.SafeURL("/app/tournaments/" + strconv.Itoa(int(tournament.TournamentID)))}>{tournament.Name}</a></h3>
 		
 	}
 }
