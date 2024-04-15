@@ -31,7 +31,8 @@ CREATE TABLE matches (
     match_date TIMESTAMP NOT NULL,
     round_name VARCHAR(50) NOT NULL,
     lichess_round_id VARCHAR(50) NOT NULL,
-    lichess_game_id VARCHAR(50) 
+    lichess_game_id VARCHAR(50),
+    match_result INTEGER CHECK (match_result >= 0 AND match_result < 3) -- 0 for white, 1 for draw, 2 for black
 );
 
 CREATE TABLE bets (

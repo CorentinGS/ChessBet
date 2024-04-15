@@ -106,6 +106,7 @@ func (u *UseCase) createMatches(ctx context.Context, games []lichess.Game, round
 		}
 
 		matchDate := time.Unix(roundDetails.Round.StartsAt, 0) // Convert int64 to time.Time
+		gameID := game.ID
 
 		matchParams = append(matchParams, db.CreateMatchesParams{
 			TournamentID:   &tournament.TournamentID,
@@ -114,6 +115,7 @@ func (u *UseCase) createMatches(ctx context.Context, games []lichess.Game, round
 			MatchDate:      matchDate, // Use the converted time.Time value
 			RoundName:      roundDetails.Round.Name,
 			LichessRoundID: round.ID,
+			LichessGameID:  &gameID,
 		})
 	}
 
