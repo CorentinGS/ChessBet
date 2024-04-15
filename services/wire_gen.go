@@ -9,6 +9,9 @@ package services
 import (
 	"github.com/corentings/chessbet/app/handlers"
 	"github.com/corentings/chessbet/infrastructures"
+	"github.com/corentings/chessbet/services/bet"
+	"github.com/corentings/chessbet/services/match"
+	"github.com/corentings/chessbet/services/tournament"
 	"github.com/corentings/chessbet/services/user"
 )
 
@@ -26,4 +29,25 @@ func InitializeJwtMiddleware() handlers.JwtMiddleware {
 	iUseCase := user.NewUseCase(pool)
 	jwtMiddleware := handlers.NewJwtMiddleware(iUseCase)
 	return jwtMiddleware
+}
+
+func InitializeBetHandler() handlers.BetController {
+	pool := infrastructures.GetPgxConn()
+	iUseCase := bet.NewUseCase(pool)
+	betController := handlers.NewBetController(iUseCase)
+	return betController
+}
+
+func InitializeTournamentHandler() handlers.TournamentController {
+	pool := infrastructures.GetPgxConn()
+	iUseCase := tournament.NewUseCase(pool)
+	tournamentController := handlers.NewTournamentController(iUseCase)
+	return tournamentController
+}
+
+func InitializeMatchHandler() handlers.MatchController {
+	pool := infrastructures.GetPgxConn()
+	iUseCase := match.NewUseCase(pool)
+	matchController := handlers.NewMatchController(iUseCase)
+	return matchController
 }
