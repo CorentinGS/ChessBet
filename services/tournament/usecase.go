@@ -21,8 +21,8 @@ func NewUseCase(dbConn *pgxpool.Pool) IUseCase {
 	return &UseCase{q: q}
 }
 
-func (u *UseCase) GetTournamentByID(_ context.Context, _ int32) (db.Tournament, error) {
-	return db.Tournament{}, nil
+func (u *UseCase) GetTournamentByID(ctx context.Context, id int32) (db.Tournament, error) {
+	return u.q.GetTournament(ctx, id)
 }
 
 func (u *UseCase) GetTournaments(_ context.Context) ([]db.Tournament, error) {
@@ -105,11 +105,11 @@ func (u *UseCase) createMatches(ctx context.Context, games []lichess.Game, round
 			continue
 		}
 
-		matchDate := time.Unix(roundDetails.Round.StartsAt, 0) // Convert int64 to time.Time
+		matchDate := time.Unix(roundDetails.Round.StartsAt/millisecondsToSeconds, 0) // Convert int64 to time.Time
 		gameID := game.ID
 
 		matchParams = append(matchParams, db.CreateMatchesParams{
-			TournamentID:   &tournament.TournamentID,
+			TournamentID:   tournament.TournamentID,
 			Player1ID:      whitePlayer.PlayerID,
 			Player2ID:      blackPlayer.PlayerID,
 			MatchDate:      matchDate, // Use the converted time.Time value

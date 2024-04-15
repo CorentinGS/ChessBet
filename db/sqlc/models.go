@@ -20,7 +20,7 @@ type Bet struct {
 
 type Match struct {
 	MatchID        int32
-	TournamentID   *int32
+	TournamentID   int32
 	Player1ID      int32
 	Player2ID      int32
 	MatchDate      time.Time

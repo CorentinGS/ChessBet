@@ -25,7 +25,7 @@ CREATE TABLE tournaments (
 
 CREATE TABLE matches (
     match_id SERIAL PRIMARY KEY NOT NULL,
-    tournament_id INTEGER REFERENCES tournaments(tournament_id),
+    tournament_id INTEGER REFERENCES tournaments(tournament_id) NOT NULL,
     player1_id INTEGER REFERENCES players(player_id) NOT NULL,
     player2_id INTEGER REFERENCES players(player_id) NOT NULL,
     match_date TIMESTAMP NOT NULL,

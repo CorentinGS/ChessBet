@@ -16,7 +16,7 @@ INSERT INTO matches (tournament_id, player1_id, player2_id,
 `
 
 type CreateMatchParams struct {
-	TournamentID   *int32
+	TournamentID   int32
 	Player1ID      int32
 	Player2ID      int32
 	MatchDate      time.Time
@@ -53,7 +53,7 @@ func (q *Queries) CreateMatch(ctx context.Context, arg CreateMatchParams) (Match
 }
 
 type CreateMatchesParams struct {
-	TournamentID   *int32
+	TournamentID   int32
 	Player1ID      int32
 	Player2ID      int32
 	MatchDate      time.Time
@@ -82,40 +82,6 @@ func (q *Queries) DeleteMatch(ctx context.Context, matchID int32) (Match, error)
 		&i.MatchResult,
 	)
 	return i, err
-}
-
-const getCurrentMatchesByTournament = `-- name: GetCurrentMatchesByTournament :many
-SELECT match_id, tournament_id, player1_id, player2_id, match_date, round_name, lichess_round_id, lichess_game_id, match_result FROM matches WHERE tournament_id = $1 AND match_date = CURRENT_DATE
-`
-
-func (q *Queries) GetCurrentMatchesByTournament(ctx context.Context, tournamentID *int32) ([]Match, error) {
-	rows, err := q.db.Query(ctx, getCurrentMatchesByTournament, tournamentID)
-	if err != nil {
-		return nil, err
-	}
-	defer rows.Close()
-	var items []Match
-	for rows.Next() {
-		var i Match
-		if err := rows.Scan(
-			&i.MatchID,
-			&i.TournamentID,
-			&i.Player1ID,
-			&i.Player2ID,
-			&i.MatchDate,
-			&i.RoundName,
-			&i.LichessRoundID,
-			&i.LichessGameID,
-			&i.MatchResult,
-		); err != nil {
-			return nil, err
-		}
-		items = append(items, i)
-	}
-	if err := rows.Err(); err != nil {
-		return nil, err
-	}
-	return items, nil
 }
 
 const getMatch = `-- name: GetMatch :one
@@ -173,272 +139,45 @@ func (q *Queries) GetMatches(ctx context.Context) ([]Match, error) {
 	return items, nil
 }
 
-const getMatchesByDate = `-- name: GetMatchesByDate :many
-SELECT match_id, tournament_id, player1_id, player2_id, match_date, round_name, lichess_round_id, lichess_game_id, match_result FROM matches WHERE match_date = $1
-`
-
-func (q *Queries) GetMatchesByDate(ctx context.Context, matchDate time.Time) ([]Match, error) {
-	rows, err := q.db.Query(ctx, getMatchesByDate, matchDate)
-	if err != nil {
-		return nil, err
-	}
-	defer rows.Close()
-	var items []Match
-	for rows.Next() {
-		var i Match
-		if err := rows.Scan(
-			&i.MatchID,
-			&i.TournamentID,
-			&i.Player1ID,
-			&i.Player2ID,
-			&i.MatchDate,
-			&i.RoundName,
-			&i.LichessRoundID,
-			&i.LichessGameID,
-			&i.MatchResult,
-		); err != nil {
-			return nil, err
-		}
-		items = append(items, i)
-	}
-	if err := rows.Err(); err != nil {
-		return nil, err
-	}
-	return items, nil
-}
-
-const getMatchesByPlayer = `-- name: GetMatchesByPlayer :many
-SELECT match_id, tournament_id, player1_id, player2_id, match_date, round_name, lichess_round_id, lichess_game_id, match_result FROM matches WHERE player1_id = $1 OR player2_id = $1
-`
-
-func (q *Queries) GetMatchesByPlayer(ctx context.Context, player1ID int32) ([]Match, error) {
-	rows, err := q.db.Query(ctx, getMatchesByPlayer, player1ID)
-	if err != nil {
-		return nil, err
-	}
-	defer rows.Close()
-	var items []Match
-	for rows.Next() {
-		var i Match
-		if err := rows.Scan(
-			&i.MatchID,
-			&i.TournamentID,
-			&i.Player1ID,
-			&i.Player2ID,
-			&i.MatchDate,
-			&i.RoundName,
-			&i.LichessRoundID,
-			&i.LichessGameID,
-			&i.MatchResult,
-		); err != nil {
-			return nil, err
-		}
-		items = append(items, i)
-	}
-	if err := rows.Err(); err != nil {
-		return nil, err
-	}
-	return items, nil
-}
-
-const getMatchesByPlayerAndDate = `-- name: GetMatchesByPlayerAndDate :many
-SELECT match_id, tournament_id, player1_id, player2_id, match_date, round_name, lichess_round_id, lichess_game_id, match_result FROM matches WHERE (player1_id = $1 OR player2_id = $1) AND match_date = $2
-`
-
-type GetMatchesByPlayerAndDateParams struct {
-	Player1ID int32
-	MatchDate time.Time
-}
-
-func (q *Queries) GetMatchesByPlayerAndDate(ctx context.Context, arg GetMatchesByPlayerAndDateParams) ([]Match, error) {
-	rows, err := q.db.Query(ctx, getMatchesByPlayerAndDate, arg.Player1ID, arg.MatchDate)
-	if err != nil {
-		return nil, err
-	}
-	defer rows.Close()
-	var items []Match
-	for rows.Next() {
-		var i Match
-		if err := rows.Scan(
-			&i.MatchID,
-			&i.TournamentID,
-			&i.Player1ID,
-			&i.Player2ID,
-			&i.MatchDate,
-			&i.RoundName,
-			&i.LichessRoundID,
-			&i.LichessGameID,
-			&i.MatchResult,
-		); err != nil {
-			return nil, err
-		}
-		items = append(items, i)
-	}
-	if err := rows.Err(); err != nil {
-		return nil, err
-	}
-	return items, nil
-}
-
-const getMatchesByTournament = `-- name: GetMatchesByTournament :many
-SELECT match_id, tournament_id, player1_id, player2_id, match_date, round_name, lichess_round_id, lichess_game_id, match_result FROM matches WHERE tournament_id = $1
-`
-
-func (q *Queries) GetMatchesByTournament(ctx context.Context, tournamentID *int32) ([]Match, error) {
-	rows, err := q.db.Query(ctx, getMatchesByTournament, tournamentID)
-	if err != nil {
-		return nil, err
-	}
-	defer rows.Close()
-	var items []Match
-	for rows.Next() {
-		var i Match
-		if err := rows.Scan(
-			&i.MatchID,
-			&i.TournamentID,
-			&i.Player1ID,
-			&i.Player2ID,
-			&i.MatchDate,
-			&i.RoundName,
-			&i.LichessRoundID,
-			&i.LichessGameID,
-			&i.MatchResult,
-		); err != nil {
-			return nil, err
-		}
-		items = append(items, i)
-	}
-	if err := rows.Err(); err != nil {
-		return nil, err
-	}
-	return items, nil
-}
-
-const getMatchesByTournamentAndDate = `-- name: GetMatchesByTournamentAndDate :many
-SELECT match_id, tournament_id, player1_id, player2_id, match_date, round_name, lichess_round_id, lichess_game_id, match_result FROM matches WHERE tournament_id = $1 AND match_date = $2
-`
-
-type GetMatchesByTournamentAndDateParams struct {
-	TournamentID *int32
-	MatchDate    time.Time
-}
-
-func (q *Queries) GetMatchesByTournamentAndDate(ctx context.Context, arg GetMatchesByTournamentAndDateParams) ([]Match, error) {
-	rows, err := q.db.Query(ctx, getMatchesByTournamentAndDate, arg.TournamentID, arg.MatchDate)
-	if err != nil {
-		return nil, err
-	}
-	defer rows.Close()
-	var items []Match
-	for rows.Next() {
-		var i Match
-		if err := rows.Scan(
-			&i.MatchID,
-			&i.TournamentID,
-			&i.Player1ID,
-			&i.Player2ID,
-			&i.MatchDate,
-			&i.RoundName,
-			&i.LichessRoundID,
-			&i.LichessGameID,
-			&i.MatchResult,
-		); err != nil {
-			return nil, err
-		}
-		items = append(items, i)
-	}
-	if err := rows.Err(); err != nil {
-		return nil, err
-	}
-	return items, nil
-}
-
-const getMatchesByTournamentAndPlayer = `-- name: GetMatchesByTournamentAndPlayer :many
-SELECT match_id, tournament_id, player1_id, player2_id, match_date, round_name, lichess_round_id, lichess_game_id, match_result FROM matches WHERE tournament_id = $1 AND (player1_id = $2 OR player2_id = $2)
-`
-
-type GetMatchesByTournamentAndPlayerParams struct {
-	TournamentID *int32
-	Player1ID    int32
-}
-
-func (q *Queries) GetMatchesByTournamentAndPlayer(ctx context.Context, arg GetMatchesByTournamentAndPlayerParams) ([]Match, error) {
-	rows, err := q.db.Query(ctx, getMatchesByTournamentAndPlayer, arg.TournamentID, arg.Player1ID)
-	if err != nil {
-		return nil, err
-	}
-	defer rows.Close()
-	var items []Match
-	for rows.Next() {
-		var i Match
-		if err := rows.Scan(
-			&i.MatchID,
-			&i.TournamentID,
-			&i.Player1ID,
-			&i.Player2ID,
-			&i.MatchDate,
-			&i.RoundName,
-			&i.LichessRoundID,
-			&i.LichessGameID,
-			&i.MatchResult,
-		); err != nil {
-			return nil, err
-		}
-		items = append(items, i)
-	}
-	if err := rows.Err(); err != nil {
-		return nil, err
-	}
-	return items, nil
-}
-
-const getPastMatchesByTournament = `-- name: GetPastMatchesByTournament :many
-SELECT match_id, tournament_id, player1_id, player2_id, match_date, round_name, lichess_round_id, lichess_game_id, match_result FROM matches WHERE tournament_id = $1 AND match_date < CURRENT_DATE
-`
-
-func (q *Queries) GetPastMatchesByTournament(ctx context.Context, tournamentID *int32) ([]Match, error) {
-	rows, err := q.db.Query(ctx, getPastMatchesByTournament, tournamentID)
-	if err != nil {
-		return nil, err
-	}
-	defer rows.Close()
-	var items []Match
-	for rows.Next() {
-		var i Match
-		if err := rows.Scan(
-			&i.MatchID,
-			&i.TournamentID,
-			&i.Player1ID,
-			&i.Player2ID,
-			&i.MatchDate,
-			&i.RoundName,
-			&i.LichessRoundID,
-			&i.LichessGameID,
-			&i.MatchResult,
-		); err != nil {
-			return nil, err
-		}
-		items = append(items, i)
-	}
-	if err := rows.Err(); err != nil {
-		return nil, err
-	}
-	return items, nil
-}
-
 const getUpcomingMatchesByTournament = `-- name: GetUpcomingMatchesByTournament :many
-SELECT match_id, tournament_id, player1_id, player2_id, match_date, round_name, lichess_round_id, lichess_game_id, match_result FROM matches WHERE tournament_id = $1 AND match_date > CURRENT_DATE
+SELECT matches.match_id, matches.tournament_id, matches.player1_id, matches.player2_id, matches.match_date, matches.round_name, matches.lichess_round_id, matches.lichess_game_id, matches.match_result, player1.player_id, player1.name, player1.rating, player1.image_url, player2.player_id, player2.name, player2.rating, player2.image_url
+FROM matches 
+JOIN players AS player1 ON matches.player1_id = player1.player_id
+JOIN players AS player2 ON matches.player2_id = player2.player_id
+WHERE matches.tournament_id = $1 AND matches.match_date >= NOW()
+GROUP BY matches.match_id, matches.lichess_round_id, player1.player_id, player2.player_id
+ORDER BY matches.match_date ASC
 `
 
-func (q *Queries) GetUpcomingMatchesByTournament(ctx context.Context, tournamentID *int32) ([]Match, error) {
+type GetUpcomingMatchesByTournamentRow struct {
+	MatchID        int32
+	TournamentID   int32
+	Player1ID      int32
+	Player2ID      int32
+	MatchDate      time.Time
+	RoundName      string
+	LichessRoundID string
+	LichessGameID  *string
+	MatchResult    *int32
+	PlayerID       int32
+	Name           string
+	Rating         int32
+	ImageUrl       *string
+	PlayerID_2     int32
+	Name_2         string
+	Rating_2       int32
+	ImageUrl_2     *string
+}
+
+func (q *Queries) GetUpcomingMatchesByTournament(ctx context.Context, tournamentID int32) ([]GetUpcomingMatchesByTournamentRow, error) {
 	rows, err := q.db.Query(ctx, getUpcomingMatchesByTournament, tournamentID)
 	if err != nil {
 		return nil, err
 	}
 	defer rows.Close()
-	var items []Match
+	var items []GetUpcomingMatchesByTournamentRow
 	for rows.Next() {
-		var i Match
+		var i GetUpcomingMatchesByTournamentRow
 		if err := rows.Scan(
 			&i.MatchID,
 			&i.TournamentID,
@@ -449,6 +188,14 @@ func (q *Queries) GetUpcomingMatchesByTournament(ctx context.Context, tournament
 			&i.LichessRoundID,
 			&i.LichessGameID,
 			&i.MatchResult,
+			&i.PlayerID,
+			&i.Name,
+			&i.Rating,
+			&i.ImageUrl,
+			&i.PlayerID_2,
+			&i.Name_2,
+			&i.Rating_2,
+			&i.ImageUrl_2,
 		); err != nil {
 			return nil, err
 		}
@@ -467,7 +214,7 @@ UPDATE matches SET tournament_id = $2, player1_id = $3, player2_id = $4,
 
 type UpdateMatchParams struct {
 	MatchID        int32
-	TournamentID   *int32
+	TournamentID   int32
 	Player1ID      int32
 	Player2ID      int32
 	MatchDate      time.Time

@@ -41,3 +41,13 @@ func (p *PageController) GetAdmin(c echo.Context) error {
 
 	return Render(c, http.StatusOK, admin)
 }
+
+func (p *PageController) GetTournament(c echo.Context) error {
+	tournamentID := c.Param("id")
+
+	hero := page.Tournament(tournamentID)
+
+	tournament := page.TournamentPage("ChessBet", true, GetNonce(c), hero)
+
+	return Render(c, http.StatusOK, tournament)
+}
