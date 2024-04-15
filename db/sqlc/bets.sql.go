@@ -7,8 +7,6 @@ package db
 
 import (
 	"context"
-
-	"github.com/jackc/pgx/v5/pgtype"
 )
 
 const createBet = `-- name: CreateBet :one
@@ -16,10 +14,10 @@ INSERT INTO bets (user_id, match_id, bet_points, bet_result) VALUES ($1, $2, $3,
 `
 
 type CreateBetParams struct {
-	UserID    pgtype.Int4
-	MatchID   pgtype.Int4
+	UserID    *int32
+	MatchID   *int32
 	BetPoints int32
-	BetResult pgtype.Bool
+	BetResult *bool
 }
 
 func (q *Queries) CreateBet(ctx context.Context, arg CreateBetParams) (Bet, error) {
@@ -84,7 +82,7 @@ const getBetsByMatch = `-- name: GetBetsByMatch :many
 SELECT bet_id, user_id, match_id, bet_points, bet_result, bet_date, bet_value FROM bets WHERE match_id = $1
 `
 
-func (q *Queries) GetBetsByMatch(ctx context.Context, matchID pgtype.Int4) ([]Bet, error) {
+func (q *Queries) GetBetsByMatch(ctx context.Context, matchID *int32) ([]Bet, error) {
 	rows, err := q.db.Query(ctx, getBetsByMatch, matchID)
 	if err != nil {
 		return nil, err
@@ -116,7 +114,7 @@ const getBetsByUser = `-- name: GetBetsByUser :many
 SELECT bet_id, user_id, match_id, bet_points, bet_result, bet_date, bet_value FROM bets WHERE user_id = $1
 `
 
-func (q *Queries) GetBetsByUser(ctx context.Context, userID pgtype.Int4) ([]Bet, error) {
+func (q *Queries) GetBetsByUser(ctx context.Context, userID *int32) ([]Bet, error) {
 	rows, err := q.db.Query(ctx, getBetsByUser, userID)
 	if err != nil {
 		return nil, err
@@ -149,8 +147,8 @@ SELECT bet_id, user_id, match_id, bet_points, bet_result, bet_date, bet_value FR
 `
 
 type GetBetsByUserAndMatchParams struct {
-	UserID  pgtype.Int4
-	MatchID pgtype.Int4
+	UserID  *int32
+	MatchID *int32
 }
 
 func (q *Queries) GetBetsByUserAndMatch(ctx context.Context, arg GetBetsByUserAndMatchParams) ([]Bet, error) {
@@ -187,10 +185,10 @@ UPDATE bets SET user_id = $2, match_id = $3, bet_points = $4, bet_result = $5 WH
 
 type UpdateBetParams struct {
 	BetID     int32
-	UserID    pgtype.Int4
-	MatchID   pgtype.Int4
+	UserID    *int32
+	MatchID   *int32
 	BetPoints int32
-	BetResult pgtype.Bool
+	BetResult *bool
 }
 
 func (q *Queries) UpdateBet(ctx context.Context, arg UpdateBetParams) (Bet, error) {

@@ -41,3 +41,15 @@ func (sc *ServiceContainer) UserHandler() handlers.UserController {
 func (sc *ServiceContainer) JwtMiddleware() handlers.JwtMiddleware {
 	return sc.jwtHandler
 }
+
+func (sc *ServiceContainer) TournamentHandler() handlers.TournamentController {
+	return InitializeTournamentHandler()
+}
+
+func (sc *ServiceContainer) BetHandler() handlers.BetController {
+	return InitializeBetHandler()
+}
+
+func (sc *ServiceContainer) MatchHandler() handlers.MatchController {
+	return InitializeMatchHandler()
+}

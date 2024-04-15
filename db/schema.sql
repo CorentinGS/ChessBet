@@ -10,14 +10,16 @@ CREATE TABLE users (
 CREATE TABLE players (
     player_id SERIAL PRIMARY KEY,
     name VARCHAR(50) NOT NULL,
-    rating INTEGER NOT NULL
+    rating INTEGER NOT NULL,
+    image_url VARCHAR(100)
 );
 
 CREATE TABLE tournaments (
     tournament_id SERIAL PRIMARY KEY,
     name VARCHAR(100) NOT NULL,
-    start_date DATE NOT NULL,
-    end_date DATE NOT NULL
+    start_date TIMESTAMP NOT NULL,
+    end_date TIMESTAMP NOT NULL,
+    lichess_tournament_id VARCHAR(50) NOT NULL UNIQUE
 );
 
 CREATE TABLE matches (
@@ -25,7 +27,9 @@ CREATE TABLE matches (
     tournament_id INTEGER REFERENCES tournaments(tournament_id),
     player1_id INTEGER REFERENCES players(player_id) NOT NULL,
     player2_id INTEGER REFERENCES players(player_id) NOT NULL,
-    match_date TIMESTAMP NOT NULL
+    match_date TIMESTAMP NOT NULL,
+    round_name VARCHAR(50) NOT NULL,
+    lichess_round_id VARCHAR(50) NOT NULL
 );
 
 CREATE TABLE bets (

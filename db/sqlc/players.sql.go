@@ -10,45 +10,61 @@ import (
 )
 
 const createPlayer = `-- name: CreatePlayer :one
-INSERT INTO players (name, rating) VALUES ($1, $2) RETURNING player_id, name, rating
+INSERT INTO players (name, rating, image_url) VALUES ($1, $2, $3) RETURNING player_id, name, rating, image_url
 `
 
 type CreatePlayerParams struct {
-	Name   string
-	Rating int32
+	Name     string
+	Rating   int32
+	ImageUrl *string
 }
 
 func (q *Queries) CreatePlayer(ctx context.Context, arg CreatePlayerParams) (Player, error) {
-	row := q.db.QueryRow(ctx, createPlayer, arg.Name, arg.Rating)
+	row := q.db.QueryRow(ctx, createPlayer, arg.Name, arg.Rating, arg.ImageUrl)
 	var i Player
-	err := row.Scan(&i.PlayerID, &i.Name, &i.Rating)
+	err := row.Scan(
+		&i.PlayerID,
+		&i.Name,
+		&i.Rating,
+		&i.ImageUrl,
+	)
 	return i, err
 }
 
 const deletePlayer = `-- name: DeletePlayer :one
-DELETE FROM players WHERE player_id = $1 RETURNING player_id, name, rating
+DELETE FROM players WHERE player_id = $1 RETURNING player_id, name, rating, image_url
 `
 
 func (q *Queries) DeletePlayer(ctx context.Context, playerID int32) (Player, error) {
 	row := q.db.QueryRow(ctx, deletePlayer, playerID)
 	var i Player
-	err := row.Scan(&i.PlayerID, &i.Name, &i.Rating)
+	err := row.Scan(
+		&i.PlayerID,
+		&i.Name,
+		&i.Rating,
+		&i.ImageUrl,
+	)
 	return i, err
 }
 
 const getPlayer = `-- name: GetPlayer :one
-SELECT player_id, name, rating FROM players WHERE player_id = $1
+SELECT player_id, name, rating, image_url FROM players WHERE player_id = $1
 `
 
 func (q *Queries) GetPlayer(ctx context.Context, playerID int32) (Player, error) {
 	row := q.db.QueryRow(ctx, getPlayer, playerID)
 	var i Player
-	err := row.Scan(&i.PlayerID, &i.Name, &i.Rating)
+	err := row.Scan(
+		&i.PlayerID,
+		&i.Name,
+		&i.Rating,
+		&i.ImageUrl,
+	)
 	return i, err
 }
 
 const getPlayers = `-- name: GetPlayers :many
-SELECT player_id, name, rating FROM players
+SELECT player_id, name, rating, image_url FROM players
 `
 
 func (q *Queries) GetPlayers(ctx context.Context) ([]Player, error) {
@@ -60,7 +76,12 @@ func (q *Queries) GetPlayers(ctx context.Context) ([]Player, error) {
 	var items []Player
 	for rows.Next() {
 		var i Player
-		if err := rows.Scan(&i.PlayerID, &i.Name, &i.Rating); err != nil {
+		if err := rows.Scan(
+			&i.PlayerID,
+			&i.Name,
+			&i.Rating,
+			&i.ImageUrl,
+		); err != nil {
 			return nil, err
 		}
 		items = append(items, i)
@@ -72,18 +93,29 @@ func (q *Queries) GetPlayers(ctx context.Context) ([]Player, error) {
 }
 
 const updatePlayer = `-- name: UpdatePlayer :one
-UPDATE players SET name = $2, rating = $3 WHERE player_id = $1 RETURNING player_id, name, rating
+UPDATE players SET name = $2, rating = $3, image_url = $4 WHERE player_id = $1 RETURNING player_id, name, rating, image_url
 `
 
 type UpdatePlayerParams struct {
 	PlayerID int32
 	Name     string
 	Rating   int32
+	ImageUrl *string
 }
 
 func (q *Queries) UpdatePlayer(ctx context.Context, arg UpdatePlayerParams) (Player, error) {
-	row := q.db.QueryRow(ctx, updatePlayer, arg.PlayerID, arg.Name, arg.Rating)
+	row := q.db.QueryRow(ctx, updatePlayer,
+		arg.PlayerID,
+		arg.Name,
+		arg.Rating,
+		arg.ImageUrl,
+	)
 	var i Player
-	err := row.Scan(&i.PlayerID, &i.Name, &i.Rating)
+	err := row.Scan(
+		&i.PlayerID,
+		&i.Name,
+		&i.Rating,
+		&i.ImageUrl,
+	)
 	return i, err
 }

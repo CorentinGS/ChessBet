@@ -1,3 +1,5 @@
-h1:IeaeMIzUoe9KSKFxLIgTKj3VfGAQgIS842UtFPQb/CM=
+h1:c8WqfbPISww2n02aScBZK89D2BAUfXcDhWN9cVb9dbc=
 20240411234014_initial_schema.sql h1:PRIf5fADVboFJ/D7jMxtLImlg4se1Nz+VLCg63sFBU4=
 20240415084756_add_players_id.sql h1:HjksaQqOCc6IGVrzV+Wl5uh+eBR3En4+sA7G4bsHOVk=
+20240415092911_add_lichess_api.sql h1:GN9WCHI3T4Sye4f+kW12cGs/3xTLVlEi7T5K/2OrYj0=
+20240415103131_add_lichess_api_unique.sql h1:YwH5T1gpGLLv3sgKQZuMj9sfD3iuY9dSSsT9oKzphxA=

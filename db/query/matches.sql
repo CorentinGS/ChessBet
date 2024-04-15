@@ -5,10 +5,12 @@ SELECT * FROM matches;
 SELECT * FROM matches WHERE match_id = $1;
 
 -- name: CreateMatch :one
-INSERT INTO matches (tournament_id, player1_id, player2_id, match_date) VALUES ($1, $2, $3, $4) RETURNING *;
+INSERT INTO matches (tournament_id, player1_id, player2_id,
+ match_date, round_name, lichess_round_id) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *;
 
 -- name: UpdateMatch :one
-UPDATE matches SET tournament_id = $2, player1_id = $3, player2_id = $4, match_date = $5 WHERE match_id = $1 RETURNING *;
+UPDATE matches SET tournament_id = $2, player1_id = $3, player2_id = $4,
+ match_date = $5, round_name = $6, lichess_round_id = $7 WHERE match_id = $1 RETURNING *;
 
 -- name: DeleteMatch :one
 DELETE FROM matches WHERE match_id = $1 RETURNING *;
