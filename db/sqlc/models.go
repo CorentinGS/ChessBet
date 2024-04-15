@@ -16,17 +16,22 @@ type Bet struct {
 	MatchID   pgtype.Int4
 	BetPoints int32
 	BetResult pgtype.Bool
+	BetDate   time.Time
+	BetValue  int32
 }
 
 type Match struct {
-	MatchID               int32
-	TournamentID          pgtype.Int4
-	Player1               string
-	Player2               string
-	WinProbabilityPlayer1 float64
-	DrawProbability       float64
-	WinProbabilityPlayer2 float64
-	MatchDate             time.Time
+	MatchID      int32
+	TournamentID pgtype.Int4
+	Player1ID    int32
+	Player2ID    int32
+	MatchDate    time.Time
+}
+
+type Player struct {
+	PlayerID int32
+	Name     string
+	Rating   int32
 }
 
 type Tournament struct {
