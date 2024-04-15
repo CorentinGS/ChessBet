@@ -17,10 +17,10 @@ func NewUseCase(dbConn *pgxpool.Pool) IUseCase {
 	return &UseCase{q: q}
 }
 
-func (u *UseCase) GetMatchByID(ctx context.Context, id int32) (db.Match, error) {
+func (u *UseCase) GetMatchByID(_ context.Context, _ int32) (db.Match, error) {
 	return db.Match{}, nil
 }
 
-func (u *UseCase) GetMatches(ctx context.Context) ([]db.Match, error) {
+func (u *UseCase) GetMatches(_ context.Context) ([]db.Match, error) {
 	return []db.Match{}, nil
 }
