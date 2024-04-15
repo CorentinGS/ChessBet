@@ -1,0 +1,58 @@
+package page
+
+import "github.com/corentings/chessbet/app/views/layout"
+import "github.com/corentings/chessbet/domain"
+import 	db "github.com/corentings/chessbet/db/sqlc"
+
+
+templ Tournament(id string) {
+	<style>
+	me {
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		align-items: center;
+		text-align: center;
+	}
+	</style>
+	<section> 
+		<div hx-get={"/tournaments/" + id} hx-trigger="revealed" hx-swap="outerHTML">
+			<h1>Loading...</h1>
+		</div>
+		<div hx-get={"/matches/upcoming/" + id} hx-trigger="revealed" hx-swap="outerHTML">
+			<h1>Loading...</h1>
+		</div>
+	</section>
+}
+
+
+templ TournamentComponent(tournament db.Tournament) {
+	<div>
+		<h1>{tournament.Name}</h1>
+	</div>
+}
+
+templ MatchGallery(rounds [][]db.GetUpcomingMatchesByTournamentRow) {
+	<div> 
+		for _, round := range rounds {
+			<h2>{round[0].RoundName}</h2>
+			<ul>
+				for _, match := range round {
+					<li>
+					{match.Name} vs {match.Name_2}
+					</li>
+				}
+			</ul>
+		}
+	</div>
+}
+
+
+templ TournamentPage(title string,
+    fromProtected bool,
+	nonce domain.Nonce,
+    cmp templ.Component) {
+	@layout.Base(title, fromProtected, nonce) {
+		@cmp
+	}
+}

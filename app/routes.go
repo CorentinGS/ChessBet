@@ -24,6 +24,7 @@ func (i *InstanceSingleton) registerRoutes(e *echo.Echo) {
 	serviceContainer := services.DefaultServiceContainer()
 	user := serviceContainer.UserHandler()
 	pageController := handlers.NewPageController()
+	matchController := serviceContainer.MatchHandler()
 	jwtMiddleware := serviceContainer.JwtMiddleware()
 	tournament := serviceContainer.TournamentHandler()
 
@@ -42,6 +43,8 @@ func (i *InstanceSingleton) registerRoutes(e *echo.Echo) {
 	connectedGroup.Use(jwtMiddleware.AuthorizeUser)
 	connectedGroup.GET("", pageController.GetHome)
 
+	connectedGroup.GET("/tournaments/:id", pageController.GetTournament)
+
 	// Health check
 	e.GET("/health", func(c echo.Context) error {
 		return c.NoContent(http.StatusOK)
@@ -58,4 +61,9 @@ func (i *InstanceSingleton) registerRoutes(e *echo.Echo) {
 	tournamentRoutes := e.Group("/tournaments")
 
 	tournamentRoutes.GET("/in-progress", tournament.GetTournamentsInProgress)
+	tournamentRoutes.GET("/:id", tournament.GetTournamentByID)
+
+	// Match routes
+	matchRoutes := e.Group("/matches")
+	matchRoutes.GET("/upcoming/:id", matchController.GetUpcomingMatchByTournament)
 }

@@ -3,6 +3,7 @@ package handlers
 import (
 	"log/slog"
 	"net/http"
+	"strconv"
 
 	"github.com/corentings/chessbet/app/views/page"
 	"github.com/corentings/chessbet/services/tournament"
@@ -37,4 +38,25 @@ func (tc *TournamentController) GetTournamentsInProgress(c echo.Context) error {
 	slog.Info("Tournaments in progress", slog.Int("count", len(tournaments)))
 
 	return Render(c, http.StatusOK, page.Gallery(tournaments))
+}
+
+func (tc *TournamentController) GetTournamentByID(c echo.Context) error {
+	tournamentID := c.Param("id")
+
+	// convert string to int32
+	tournamentIDInt, err := strconv.ParseInt(tournamentID, 10, 32)
+	if err != nil {
+		slog.Error("Error parsing tournament ID", slog.String("error", err.Error()))
+		return RedirectToErrorPage(c, http.StatusBadRequest)
+	}
+
+	tournament, err := tc.useCase.GetTournamentByID(c.Request().Context(), int32(tournamentIDInt))
+	if err != nil {
+		slog.Error("Error getting tournament by id", slog.String("error", err.Error()))
+		return RedirectToErrorPage(c, http.StatusInternalServerError)
+	}
+
+	slog.Info("Tournament by id", slog.Int64("id", tournamentIDInt), slog.String("name", tournament.Name))
+
+	return Render(c, http.StatusOK, page.TournamentComponent(tournament))
 }
