@@ -35,6 +35,8 @@ func (tc *TournamentController) GetTournamentsInProgress(c echo.Context) error {
 		return RedirectToErrorPage(c, http.StatusInternalServerError)
 	}
 
+	slog.Debug("Tournaments in progress", slog.Int("count", len(tournaments)), slog.Int("id", int(tournaments[0].TournamentID)))
+
 	slog.Info("Tournaments in progress", slog.Int("count", len(tournaments)))
 
 	return Render(c, http.StatusOK, page.Gallery(tournaments))
