@@ -2,6 +2,8 @@ package page
 
 import "github.com/corentings/chessbet/app/views/layout"
 import "github.com/corentings/chessbet/domain"
+import 	db "github.com/corentings/chessbet/db/sqlc"
+
 
 templ Home(username string) {
 	<style>
@@ -18,7 +20,27 @@ templ Home(username string) {
 		<p>ChessBet is a platform where you can bet on chess games.</p>
 		<p>It is a fun way to enjoy chess games and make some money.</p>
 		<p>Sign up now and start betting!</p>
-                            </me>
+    </me>
+
+	<div hx-get="/tournaments/in-progress" hx-trigger="revealed" hx-swap="outerHTML"></div>
+
+}
+
+templ Gallery(tournaments []db.Tournament) {
+	<style>
+	.me {
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		align-items: center;
+		text-align: center;
+	}
+	</style>
+
+	for _, tournament := range tournaments {
+		<h2>{tournament.Name}</h2>
+		
+	}
 }
 
 templ HomePage(title string,

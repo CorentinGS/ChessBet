@@ -7,34 +7,40 @@ package db
 
 import (
 	"context"
-
-	"github.com/jackc/pgx/v5/pgtype"
+	"time"
 )
 
 const createTournament = `-- name: CreateTournament :one
-INSERT INTO tournaments (name, start_date, end_date) VALUES ($1, $2, $3) RETURNING tournament_id, name, start_date, end_date
+INSERT INTO tournaments (name, start_date, end_date, lichess_tournament_id) VALUES ($1, $2, $3, $4) RETURNING tournament_id, name, start_date, end_date, lichess_tournament_id
 `
 
 type CreateTournamentParams struct {
-	Name      string
-	StartDate pgtype.Date
-	EndDate   pgtype.Date
+	Name                string
+	StartDate           time.Time
+	EndDate             time.Time
+	LichessTournamentID string
 }
 
 func (q *Queries) CreateTournament(ctx context.Context, arg CreateTournamentParams) (Tournament, error) {
-	row := q.db.QueryRow(ctx, createTournament, arg.Name, arg.StartDate, arg.EndDate)
+	row := q.db.QueryRow(ctx, createTournament,
+		arg.Name,
+		arg.StartDate,
+		arg.EndDate,
+		arg.LichessTournamentID,
+	)
 	var i Tournament
 	err := row.Scan(
 		&i.TournamentID,
 		&i.Name,
 		&i.StartDate,
 		&i.EndDate,
+		&i.LichessTournamentID,
 	)
 	return i, err
 }
 
 const deleteTournament = `-- name: DeleteTournament :one
-DELETE FROM tournaments WHERE tournament_id = $1 RETURNING tournament_id, name, start_date, end_date
+DELETE FROM tournaments WHERE tournament_id = $1 RETURNING tournament_id, name, start_date, end_date, lichess_tournament_id
 `
 
 func (q *Queries) DeleteTournament(ctx context.Context, tournamentID int32) (Tournament, error) {
@@ -45,12 +51,13 @@ func (q *Queries) DeleteTournament(ctx context.Context, tournamentID int32) (Tou
 		&i.Name,
 		&i.StartDate,
 		&i.EndDate,
+		&i.LichessTournamentID,
 	)
 	return i, err
 }
 
 const getTournament = `-- name: GetTournament :one
-SELECT tournament_id, name, start_date, end_date FROM tournaments WHERE tournament_id = $1
+SELECT tournament_id, name, start_date, end_date, lichess_tournament_id FROM tournaments WHERE tournament_id = $1
 `
 
 func (q *Queries) GetTournament(ctx context.Context, tournamentID int32) (Tournament, error) {
@@ -61,12 +68,13 @@ func (q *Queries) GetTournament(ctx context.Context, tournamentID int32) (Tourna
 		&i.Name,
 		&i.StartDate,
 		&i.EndDate,
+		&i.LichessTournamentID,
 	)
 	return i, err
 }
 
 const getTournamentInProgress = `-- name: GetTournamentInProgress :many
-SELECT tournament_id, name, start_date, end_date FROM tournaments WHERE start_date <= CURRENT_DATE AND end_date >= CURRENT_DATE
+SELECT tournament_id, name, start_date, end_date, lichess_tournament_id FROM tournaments WHERE start_date <= now() AND end_date >= now()
 `
 
 func (q *Queries) GetTournamentInProgress(ctx context.Context) ([]Tournament, error) {
@@ -83,6 +91,7 @@ func (q *Queries) GetTournamentInProgress(ctx context.Context) ([]Tournament, er
 			&i.Name,
 			&i.StartDate,
 			&i.EndDate,
+			&i.LichessTournamentID,
 		); err != nil {
 			return nil, err
 		}
@@ -95,7 +104,7 @@ func (q *Queries) GetTournamentInProgress(ctx context.Context) ([]Tournament, er
 }
 
 const getTournamentPast = `-- name: GetTournamentPast :many
-SELECT tournament_id, name, start_date, end_date FROM tournaments WHERE end_date < CURRENT_DATE
+SELECT tournament_id, name, start_date, end_date, lichess_tournament_id FROM tournaments WHERE end_date < CURRENT_DATE
 `
 
 func (q *Queries) GetTournamentPast(ctx context.Context) ([]Tournament, error) {
@@ -112,6 +121,7 @@ func (q *Queries) GetTournamentPast(ctx context.Context) ([]Tournament, error) {
 			&i.Name,
 			&i.StartDate,
 			&i.EndDate,
+			&i.LichessTournamentID,
 		); err != nil {
 			return nil, err
 		}
@@ -124,7 +134,7 @@ func (q *Queries) GetTournamentPast(ctx context.Context) ([]Tournament, error) {
 }
 
 const getTournamentUpcoming = `-- name: GetTournamentUpcoming :many
-SELECT tournament_id, name, start_date, end_date FROM tournaments WHERE start_date > CURRENT_DATE
+SELECT tournament_id, name, start_date, end_date, lichess_tournament_id FROM tournaments WHERE start_date > CURRENT_DATE
 `
 
 func (q *Queries) GetTournamentUpcoming(ctx context.Context) ([]Tournament, error) {
@@ -141,6 +151,7 @@ func (q *Queries) GetTournamentUpcoming(ctx context.Context) ([]Tournament, erro
 			&i.Name,
 			&i.StartDate,
 			&i.EndDate,
+			&i.LichessTournamentID,
 		); err != nil {
 			return nil, err
 		}
@@ -153,7 +164,7 @@ func (q *Queries) GetTournamentUpcoming(ctx context.Context) ([]Tournament, erro
 }
 
 const getTournaments = `-- name: GetTournaments :many
-SELECT tournament_id, name, start_date, end_date FROM tournaments
+SELECT tournament_id, name, start_date, end_date, lichess_tournament_id FROM tournaments
 `
 
 func (q *Queries) GetTournaments(ctx context.Context) ([]Tournament, error) {
@@ -170,6 +181,7 @@ func (q *Queries) GetTournaments(ctx context.Context) ([]Tournament, error) {
 			&i.Name,
 			&i.StartDate,
 			&i.EndDate,
+			&i.LichessTournamentID,
 		); err != nil {
 			return nil, err
 		}
@@ -182,14 +194,15 @@ func (q *Queries) GetTournaments(ctx context.Context) ([]Tournament, error) {
 }
 
 const updateTournament = `-- name: UpdateTournament :one
-UPDATE tournaments SET name = $2, start_date = $3, end_date = $4 WHERE tournament_id = $1 RETURNING tournament_id, name, start_date, end_date
+UPDATE tournaments SET name = $2, start_date = $3, end_date = $4, lichess_tournament_id = $5 WHERE tournament_id = $1 RETURNING tournament_id, name, start_date, end_date, lichess_tournament_id
 `
 
 type UpdateTournamentParams struct {
-	TournamentID int32
-	Name         string
-	StartDate    pgtype.Date
-	EndDate      pgtype.Date
+	TournamentID        int32
+	Name                string
+	StartDate           time.Time
+	EndDate             time.Time
+	LichessTournamentID string
 }
 
 func (q *Queries) UpdateTournament(ctx context.Context, arg UpdateTournamentParams) (Tournament, error) {
@@ -198,6 +211,7 @@ func (q *Queries) UpdateTournament(ctx context.Context, arg UpdateTournamentPara
 		arg.Name,
 		arg.StartDate,
 		arg.EndDate,
+		arg.LichessTournamentID,
 	)
 	var i Tournament
 	err := row.Scan(
@@ -205,6 +219,7 @@ func (q *Queries) UpdateTournament(ctx context.Context, arg UpdateTournamentPara
 		&i.Name,
 		&i.StartDate,
 		&i.EndDate,
+		&i.LichessTournamentID,
 	)
 	return i, err
 }

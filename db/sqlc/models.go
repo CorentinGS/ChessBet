@@ -6,52 +6,54 @@ package db
 
 import (
 	"time"
-
-	"github.com/jackc/pgx/v5/pgtype"
 )
 
 type Bet struct {
 	BetID     int32
-	UserID    pgtype.Int4
-	MatchID   pgtype.Int4
+	UserID    *int32
+	MatchID   *int32
 	BetPoints int32
-	BetResult pgtype.Bool
+	BetResult *bool
 	BetDate   time.Time
 	BetValue  int32
 }
 
 type Match struct {
-	MatchID      int32
-	TournamentID pgtype.Int4
-	Player1ID    int32
-	Player2ID    int32
-	MatchDate    time.Time
+	MatchID        int32
+	TournamentID   *int32
+	Player1ID      int32
+	Player2ID      int32
+	MatchDate      time.Time
+	RoundName      string
+	LichessRoundID string
 }
 
 type Player struct {
 	PlayerID int32
 	Name     string
 	Rating   int32
+	ImageUrl *string
 }
 
 type Tournament struct {
-	TournamentID int32
-	Name         string
-	StartDate    pgtype.Date
-	EndDate      pgtype.Date
+	TournamentID        int32
+	Name                string
+	StartDate           time.Time
+	EndDate             time.Time
+	LichessTournamentID string
 }
 
 type User struct {
 	UserID       int32
 	Username     string
 	Points       int32
-	OauthID      pgtype.Text
+	OauthID      *string
 	EmailAddress string
 }
 
 type UserPointsHistory struct {
 	TransactionID     int32
-	UserID            pgtype.Int4
+	UserID            *int32
 	TransactionDate   time.Time
 	TransactionAmount int32
 	RemainingPoints   int32

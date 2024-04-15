@@ -33,3 +33,11 @@ func (p *PageController) GetHome(c echo.Context) error {
 
 	return Render(c, http.StatusOK, home)
 }
+
+func (p *PageController) GetAdmin(c echo.Context) error {
+	hero := page.Admin()
+
+	admin := page.AdminPage("ChessBet", true, GetNonce(c), hero)
+
+	return Render(c, http.StatusOK, admin)
+}

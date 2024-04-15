@@ -7,8 +7,6 @@ package db
 
 import (
 	"context"
-
-	"github.com/jackc/pgx/v5/pgtype"
 )
 
 const createUser = `-- name: CreateUser :one
@@ -89,7 +87,7 @@ const getUserByOauthId = `-- name: GetUserByOauthId :one
 SELECT user_id, username, points, oauth_id, email_address FROM users WHERE oauth_id = $1
 `
 
-func (q *Queries) GetUserByOauthId(ctx context.Context, oauthID pgtype.Text) (User, error) {
+func (q *Queries) GetUserByOauthId(ctx context.Context, oauthID *string) (User, error) {
 	row := q.db.QueryRow(ctx, getUserByOauthId, oauthID)
 	var i User
 	err := row.Scan(

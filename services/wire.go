@@ -10,7 +10,6 @@ import (
 	"github.com/corentings/chessbet/services/match"
 	"github.com/corentings/chessbet/services/tournament"
 	"github.com/corentings/chessbet/services/user"
-
 	"github.com/google/wire"
 )
 

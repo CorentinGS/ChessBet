@@ -25,9 +25,17 @@ func (i *InstanceSingleton) registerRoutes(e *echo.Echo) {
 	user := serviceContainer.UserHandler()
 	pageController := handlers.NewPageController()
 	jwtMiddleware := serviceContainer.JwtMiddleware()
+	tournament := serviceContainer.TournamentHandler()
 
 	// Page routes
 	e.GET("/", pageController.GetIndex)
+
+	adminGroup := e.Group("/admin")
+	adminGroup.Use(jwtMiddleware.AuthorizeUser)
+	adminGroup.GET("", pageController.GetAdmin)
+
+	// Admin routes
+	adminGroup.POST("/tournaments/", tournament.CreateTournamentFromLichessID)
 
 	connectedGroup := e.Group("/app")
 
@@ -45,4 +53,9 @@ func (i *InstanceSingleton) registerRoutes(e *echo.Echo) {
 	// User routes
 	usersRoutes.GET("/discord/login", user.DiscordLogin)
 	usersRoutes.GET("/discord/callback", user.DiscordCallback)
+
+	// Tournament routes
+	tournamentRoutes := e.Group("/tournaments")
+
+	tournamentRoutes.GET("/in-progress", tournament.GetTournamentsInProgress)
 }
