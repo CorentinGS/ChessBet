@@ -19,6 +19,7 @@ type Round struct {
 	Slug      string `json:"slug"`
 	URL       string `json:"url"`
 	CreatedAt int64  `json:"createdAt"`
+	StartsAt  int64  `json:"startsAt"` // Unix timestamp
 }
 
 type Broadcast struct {
@@ -66,4 +67,30 @@ func (r Round) String() string {
 	sb.WriteString(r.URL)
 
 	return sb.String()
+}
+
+type Player struct {
+	Name   string `json:"name"`
+	Title  string `json:"title"`
+	Fed    string `json:"fed"`
+	Rating int    `json:"rating"`
+}
+
+type Game struct {
+	ID        string   `json:"id"`
+	Name      string   `json:"name"`
+	Status    string   `json:"status"`
+	Players   []Player `json:"players"`
+	ThinkTime int      `json:"thinkTime"`
+}
+
+type Study struct {
+	Writeable bool `json:"writeable"`
+}
+
+type RoundDetails struct {
+	Tour  Tour   `json:"tour"`
+	Games []Game `json:"games"`
+	Round Round  `json:"round"`
+	Study Study  `json:"study"`
 }

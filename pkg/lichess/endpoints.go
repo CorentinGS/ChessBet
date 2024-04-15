@@ -8,19 +8,11 @@ const (
 	BroadcastsURL = BaseURL + "/api/broadcast/"
 )
 
-func GetBroadcastsURL() string {
-	return BroadcastsURL
-}
-
-func GetBaseURL() string {
-	return BaseURL
-}
-
 // GetBroadcastURL returns the URL for the Lichess broadcast with the given ID.
-func GetBroadcastURL(id string) string {
+func getBroadcastURL(id string) string {
 	return BroadcastsURL + id
 }
 
-func GetRoundURL(id string) string {
-	return BroadcastsURL + id
+func getRoundURL(id string) string {
+	return BroadcastsURL + "-/-/" + id
 }

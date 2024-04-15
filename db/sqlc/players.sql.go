@@ -63,6 +63,22 @@ func (q *Queries) GetPlayer(ctx context.Context, playerID int32) (Player, error)
 	return i, err
 }
 
+const getPlayerByName = `-- name: GetPlayerByName :one
+SELECT player_id, name, rating, image_url FROM players WHERE name = $1
+`
+
+func (q *Queries) GetPlayerByName(ctx context.Context, name string) (Player, error) {
+	row := q.db.QueryRow(ctx, getPlayerByName, name)
+	var i Player
+	err := row.Scan(
+		&i.PlayerID,
+		&i.Name,
+		&i.Rating,
+		&i.ImageUrl,
+	)
+	return i, err
+}
+
 const getPlayers = `-- name: GetPlayers :many
 SELECT player_id, name, rating, image_url FROM players
 `

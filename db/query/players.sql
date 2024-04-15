@@ -13,3 +13,5 @@ UPDATE players SET name = $2, rating = $3, image_url = $4 WHERE player_id = $1 R
 -- name: DeletePlayer :one
 DELETE FROM players WHERE player_id = $1 RETURNING *;
 
+-- name: GetPlayerByName :one
+SELECT * FROM players WHERE name = $1;
