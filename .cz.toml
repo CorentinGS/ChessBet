@@ -2,5 +2,5 @@
 name = "cz_gitmoji"
 tag_format = "$version"
 version_scheme = "semver"
-version = "0.0.2"
+version = "1.0.0-a0"
 update_changelog_on_bump = true
