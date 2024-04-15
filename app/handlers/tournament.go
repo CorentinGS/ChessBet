@@ -23,9 +23,7 @@ func (tc *TournamentController) CreateTournamentFromLichessID(c echo.Context) er
 	if err != nil {
 		slog.Error("Error creating tournament from lichess id", slog.String("error", err.Error()))
 		return Render(c, http.StatusForbidden, page.AdminError("Failed to create tournament from lichess ID"))
-
 	}
-
 	return Render(c, http.StatusForbidden, page.AdminError("Tournament created successfully"))
 }
 

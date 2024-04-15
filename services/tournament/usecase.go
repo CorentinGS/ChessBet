@@ -20,11 +20,11 @@ func NewUseCase(dbConn *pgxpool.Pool) IUseCase {
 	return &UseCase{q: q}
 }
 
-func (u *UseCase) GetTournamentByID(ctx context.Context, id int32) (db.Tournament, error) {
+func (u *UseCase) GetTournamentByID(_ context.Context, _ int32) (db.Tournament, error) {
 	return db.Tournament{}, nil
 }
 
-func (u *UseCase) GetTournaments(ctx context.Context) ([]db.Tournament, error) {
+func (u *UseCase) GetTournaments(_ context.Context) ([]db.Tournament, error) {
 	return []db.Tournament{}, nil
 }
 
@@ -37,6 +37,8 @@ func (u *UseCase) CreateTournament(ctx context.Context, tournament db.CreateTour
 }
 
 func (u *UseCase) CreateTournamentFromLichessID(ctx context.Context, lichessID string) (db.Tournament, error) {
+	const hoursInDay = 24
+
 	broadcast, err := lichess.GetBroadcast(ctx, lichessID)
 	if err != nil {
 		return db.Tournament{}, err
@@ -46,7 +48,7 @@ func (u *UseCase) CreateTournamentFromLichessID(ctx context.Context, lichessID s
 		Name:                broadcast.Tour.Name,
 		LichessTournamentID: lichessID,
 		StartDate:           time.Now(),
-		EndDate:             time.Now().Add(time.Hour * 24),
+		EndDate:             time.Now().Add(time.Hour * hoursInDay),
 	})
 	if err != nil {
 		slog.Error("Failed to create tournament from lichess ID", slog.String("lichessID", lichessID), slog.String("error", err.Error()))

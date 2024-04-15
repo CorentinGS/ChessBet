@@ -17,10 +17,10 @@ func NewUseCase(dbConn *pgxpool.Pool) IUseCase {
 	return &UseCase{q: q}
 }
 
-func (u *UseCase) GetBetByID(ctx context.Context, id int32) (db.Bet, error) {
+func (u *UseCase) GetBetByID(_ context.Context, _ int32) (db.Bet, error) {
 	return db.Bet{}, nil
 }
 
-func (u *UseCase) GetBets(ctx context.Context) ([]db.Bet, error) {
+func (u *UseCase) GetBets(_ context.Context) ([]db.Bet, error) {
 	return nil, nil
 }

@@ -1,7 +1,6 @@
 package lichess
 
 import (
-	"fmt"
 	"strings"
 )
 
@@ -51,8 +50,6 @@ func (t Tour) String() string {
 	sb.WriteString(t.Description)
 	sb.WriteString("URL: ")
 	sb.WriteString(t.URL)
-	sb.WriteString("CreatedAt: ")
-	sb.WriteString(fmt.Sprint(t.CreatedAt))
 
 	return sb.String()
 }
@@ -67,8 +64,6 @@ func (r Round) String() string {
 	sb.WriteString(r.Slug)
 	sb.WriteString("URL: ")
 	sb.WriteString(r.URL)
-	sb.WriteString("CreatedAt: ")
-	sb.WriteString(fmt.Sprint(r.CreatedAt))
 
 	return sb.String()
 }
