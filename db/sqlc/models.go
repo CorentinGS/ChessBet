@@ -26,6 +26,7 @@ type Match struct {
 	MatchDate      time.Time
 	RoundName      string
 	LichessRoundID string
+	LichessGameID  *string
 }
 
 type Player struct {

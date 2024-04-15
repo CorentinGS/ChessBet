@@ -41,3 +41,7 @@ SELECT * FROM matches WHERE tournament_id = $1 AND match_date > CURRENT_DATE;
 
 -- name: GetCurrentMatchesByTournament :many
 SELECT * FROM matches WHERE tournament_id = $1 AND match_date = CURRENT_DATE;
+
+-- name: CreateMatches :copyfrom
+INSERT INTO matches (tournament_id, player1_id, player2_id, 
+match_date, round_name, lichess_round_id) VALUES ($1, $2, $3, $4, $5, $6);
