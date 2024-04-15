@@ -35,6 +35,8 @@ func (r iteratorForCreateMatches) Values() ([]interface{}, error) {
 		r.rows[0].MatchDate,
 		r.rows[0].RoundName,
 		r.rows[0].LichessRoundID,
+		r.rows[0].LichessGameID,
+		r.rows[0].MatchResult,
 	}, nil
 }
 
@@ -43,5 +45,5 @@ func (r iteratorForCreateMatches) Err() error {
 }
 
 func (q *Queries) CreateMatches(ctx context.Context, arg []CreateMatchesParams) (int64, error) {
-	return q.db.CopyFrom(ctx, []string{"matches"}, []string{"tournament_id", "player1_id", "player2_id", "match_date", "round_name", "lichess_round_id"}, &iteratorForCreateMatches{rows: arg})
+	return q.db.CopyFrom(ctx, []string{"matches"}, []string{"tournament_id", "player1_id", "player2_id", "match_date", "round_name", "lichess_round_id", "lichess_game_id", "match_result"}, &iteratorForCreateMatches{rows: arg})
 }

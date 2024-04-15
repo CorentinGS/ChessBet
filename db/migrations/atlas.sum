@@ -1,7 +1,8 @@
-h1:zuINx0+fFe+/lSWNqyRhdEr3RISEKEO7mL6X79llutw=
+h1:suxppSqUzGExNTx2L5nalPGd6WN/bSbHf+3Ilodrur4=
 20240411234014_initial_schema.sql h1:PRIf5fADVboFJ/D7jMxtLImlg4se1Nz+VLCg63sFBU4=
 20240415084756_add_players_id.sql h1:HjksaQqOCc6IGVrzV+Wl5uh+eBR3En4+sA7G4bsHOVk=
 20240415092911_add_lichess_api.sql h1:GN9WCHI3T4Sye4f+kW12cGs/3xTLVlEi7T5K/2OrYj0=
 20240415103131_add_lichess_api_unique.sql h1:YwH5T1gpGLLv3sgKQZuMj9sfD3iuY9dSSsT9oKzphxA=
 20240415134729_add_lichess_game_id.sql h1:87UilDxM8W+sIBpoTTdHTJte/E0nfk+Dpo5TZhoRFuU=
 20240415135350_matches_tournaments_oncascade.sql h1:ZTj8WTvAhad8Au4eOoMsLZQ0Zz5zhR0nDPkQTiwc+qM=
+20240415142759_add_matches_result.sql h1:4kCcOQJQHl0VBcXsG1MX370jTZ3oD3S4tMQSzVsWclA=

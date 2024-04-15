@@ -27,6 +27,7 @@ type Match struct {
 	RoundName      string
 	LichessRoundID string
 	LichessGameID  *string
+	MatchResult    *int32
 }
 
 type Player struct {

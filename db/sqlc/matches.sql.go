@@ -12,7 +12,7 @@ import (
 
 const createMatch = `-- name: CreateMatch :one
 INSERT INTO matches (tournament_id, player1_id, player2_id,
- match_date, round_name, lichess_round_id) VALUES ($1, $2, $3, $4, $5, $6) RETURNING match_id, tournament_id, player1_id, player2_id, match_date, round_name, lichess_round_id, lichess_game_id
+ match_date, round_name, lichess_round_id, lichess_game_id, match_result) VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING match_id, tournament_id, player1_id, player2_id, match_date, round_name, lichess_round_id, lichess_game_id, match_result
 `
 
 type CreateMatchParams struct {
@@ -22,6 +22,8 @@ type CreateMatchParams struct {
 	MatchDate      time.Time
 	RoundName      string
 	LichessRoundID string
+	LichessGameID  *string
+	MatchResult    *int32
 }
 
 func (q *Queries) CreateMatch(ctx context.Context, arg CreateMatchParams) (Match, error) {
@@ -32,6 +34,8 @@ func (q *Queries) CreateMatch(ctx context.Context, arg CreateMatchParams) (Match
 		arg.MatchDate,
 		arg.RoundName,
 		arg.LichessRoundID,
+		arg.LichessGameID,
+		arg.MatchResult,
 	)
 	var i Match
 	err := row.Scan(
@@ -43,6 +47,7 @@ func (q *Queries) CreateMatch(ctx context.Context, arg CreateMatchParams) (Match
 		&i.RoundName,
 		&i.LichessRoundID,
 		&i.LichessGameID,
+		&i.MatchResult,
 	)
 	return i, err
 }
@@ -54,10 +59,12 @@ type CreateMatchesParams struct {
 	MatchDate      time.Time
 	RoundName      string
 	LichessRoundID string
+	LichessGameID  *string
+	MatchResult    *int32
 }
 
 const deleteMatch = `-- name: DeleteMatch :one
-DELETE FROM matches WHERE match_id = $1 RETURNING match_id, tournament_id, player1_id, player2_id, match_date, round_name, lichess_round_id, lichess_game_id
+DELETE FROM matches WHERE match_id = $1 RETURNING match_id, tournament_id, player1_id, player2_id, match_date, round_name, lichess_round_id, lichess_game_id, match_result
 `
 
 func (q *Queries) DeleteMatch(ctx context.Context, matchID int32) (Match, error) {
@@ -72,12 +79,13 @@ func (q *Queries) DeleteMatch(ctx context.Context, matchID int32) (Match, error)
 		&i.RoundName,
 		&i.LichessRoundID,
 		&i.LichessGameID,
+		&i.MatchResult,
 	)
 	return i, err
 }
 
 const getCurrentMatchesByTournament = `-- name: GetCurrentMatchesByTournament :many
-SELECT match_id, tournament_id, player1_id, player2_id, match_date, round_name, lichess_round_id, lichess_game_id FROM matches WHERE tournament_id = $1 AND match_date = CURRENT_DATE
+SELECT match_id, tournament_id, player1_id, player2_id, match_date, round_name, lichess_round_id, lichess_game_id, match_result FROM matches WHERE tournament_id = $1 AND match_date = CURRENT_DATE
 `
 
 func (q *Queries) GetCurrentMatchesByTournament(ctx context.Context, tournamentID *int32) ([]Match, error) {
@@ -98,6 +106,7 @@ func (q *Queries) GetCurrentMatchesByTournament(ctx context.Context, tournamentI
 			&i.RoundName,
 			&i.LichessRoundID,
 			&i.LichessGameID,
+			&i.MatchResult,
 		); err != nil {
 			return nil, err
 		}
@@ -110,7 +119,7 @@ func (q *Queries) GetCurrentMatchesByTournament(ctx context.Context, tournamentI
 }
 
 const getMatch = `-- name: GetMatch :one
-SELECT match_id, tournament_id, player1_id, player2_id, match_date, round_name, lichess_round_id, lichess_game_id FROM matches WHERE match_id = $1
+SELECT match_id, tournament_id, player1_id, player2_id, match_date, round_name, lichess_round_id, lichess_game_id, match_result FROM matches WHERE match_id = $1
 `
 
 func (q *Queries) GetMatch(ctx context.Context, matchID int32) (Match, error) {
@@ -125,12 +134,13 @@ func (q *Queries) GetMatch(ctx context.Context, matchID int32) (Match, error) {
 		&i.RoundName,
 		&i.LichessRoundID,
 		&i.LichessGameID,
+		&i.MatchResult,
 	)
 	return i, err
 }
 
 const getMatches = `-- name: GetMatches :many
-SELECT match_id, tournament_id, player1_id, player2_id, match_date, round_name, lichess_round_id, lichess_game_id FROM matches
+SELECT match_id, tournament_id, player1_id, player2_id, match_date, round_name, lichess_round_id, lichess_game_id, match_result FROM matches
 `
 
 func (q *Queries) GetMatches(ctx context.Context) ([]Match, error) {
@@ -151,6 +161,7 @@ func (q *Queries) GetMatches(ctx context.Context) ([]Match, error) {
 			&i.RoundName,
 			&i.LichessRoundID,
 			&i.LichessGameID,
+			&i.MatchResult,
 		); err != nil {
 			return nil, err
 		}
@@ -163,7 +174,7 @@ func (q *Queries) GetMatches(ctx context.Context) ([]Match, error) {
 }
 
 const getMatchesByDate = `-- name: GetMatchesByDate :many
-SELECT match_id, tournament_id, player1_id, player2_id, match_date, round_name, lichess_round_id, lichess_game_id FROM matches WHERE match_date = $1
+SELECT match_id, tournament_id, player1_id, player2_id, match_date, round_name, lichess_round_id, lichess_game_id, match_result FROM matches WHERE match_date = $1
 `
 
 func (q *Queries) GetMatchesByDate(ctx context.Context, matchDate time.Time) ([]Match, error) {
@@ -184,6 +195,7 @@ func (q *Queries) GetMatchesByDate(ctx context.Context, matchDate time.Time) ([]
 			&i.RoundName,
 			&i.LichessRoundID,
 			&i.LichessGameID,
+			&i.MatchResult,
 		); err != nil {
 			return nil, err
 		}
@@ -196,7 +208,7 @@ func (q *Queries) GetMatchesByDate(ctx context.Context, matchDate time.Time) ([]
 }
 
 const getMatchesByPlayer = `-- name: GetMatchesByPlayer :many
-SELECT match_id, tournament_id, player1_id, player2_id, match_date, round_name, lichess_round_id, lichess_game_id FROM matches WHERE player1_id = $1 OR player2_id = $1
+SELECT match_id, tournament_id, player1_id, player2_id, match_date, round_name, lichess_round_id, lichess_game_id, match_result FROM matches WHERE player1_id = $1 OR player2_id = $1
 `
 
 func (q *Queries) GetMatchesByPlayer(ctx context.Context, player1ID int32) ([]Match, error) {
@@ -217,6 +229,7 @@ func (q *Queries) GetMatchesByPlayer(ctx context.Context, player1ID int32) ([]Ma
 			&i.RoundName,
 			&i.LichessRoundID,
 			&i.LichessGameID,
+			&i.MatchResult,
 		); err != nil {
 			return nil, err
 		}
@@ -229,7 +242,7 @@ func (q *Queries) GetMatchesByPlayer(ctx context.Context, player1ID int32) ([]Ma
 }
 
 const getMatchesByPlayerAndDate = `-- name: GetMatchesByPlayerAndDate :many
-SELECT match_id, tournament_id, player1_id, player2_id, match_date, round_name, lichess_round_id, lichess_game_id FROM matches WHERE (player1_id = $1 OR player2_id = $1) AND match_date = $2
+SELECT match_id, tournament_id, player1_id, player2_id, match_date, round_name, lichess_round_id, lichess_game_id, match_result FROM matches WHERE (player1_id = $1 OR player2_id = $1) AND match_date = $2
 `
 
 type GetMatchesByPlayerAndDateParams struct {
@@ -255,6 +268,7 @@ func (q *Queries) GetMatchesByPlayerAndDate(ctx context.Context, arg GetMatchesB
 			&i.RoundName,
 			&i.LichessRoundID,
 			&i.LichessGameID,
+			&i.MatchResult,
 		); err != nil {
 			return nil, err
 		}
@@ -267,7 +281,7 @@ func (q *Queries) GetMatchesByPlayerAndDate(ctx context.Context, arg GetMatchesB
 }
 
 const getMatchesByTournament = `-- name: GetMatchesByTournament :many
-SELECT match_id, tournament_id, player1_id, player2_id, match_date, round_name, lichess_round_id, lichess_game_id FROM matches WHERE tournament_id = $1
+SELECT match_id, tournament_id, player1_id, player2_id, match_date, round_name, lichess_round_id, lichess_game_id, match_result FROM matches WHERE tournament_id = $1
 `
 
 func (q *Queries) GetMatchesByTournament(ctx context.Context, tournamentID *int32) ([]Match, error) {
@@ -288,6 +302,7 @@ func (q *Queries) GetMatchesByTournament(ctx context.Context, tournamentID *int3
 			&i.RoundName,
 			&i.LichessRoundID,
 			&i.LichessGameID,
+			&i.MatchResult,
 		); err != nil {
 			return nil, err
 		}
@@ -300,7 +315,7 @@ func (q *Queries) GetMatchesByTournament(ctx context.Context, tournamentID *int3
 }
 
 const getMatchesByTournamentAndDate = `-- name: GetMatchesByTournamentAndDate :many
-SELECT match_id, tournament_id, player1_id, player2_id, match_date, round_name, lichess_round_id, lichess_game_id FROM matches WHERE tournament_id = $1 AND match_date = $2
+SELECT match_id, tournament_id, player1_id, player2_id, match_date, round_name, lichess_round_id, lichess_game_id, match_result FROM matches WHERE tournament_id = $1 AND match_date = $2
 `
 
 type GetMatchesByTournamentAndDateParams struct {
@@ -326,6 +341,7 @@ func (q *Queries) GetMatchesByTournamentAndDate(ctx context.Context, arg GetMatc
 			&i.RoundName,
 			&i.LichessRoundID,
 			&i.LichessGameID,
+			&i.MatchResult,
 		); err != nil {
 			return nil, err
 		}
@@ -338,7 +354,7 @@ func (q *Queries) GetMatchesByTournamentAndDate(ctx context.Context, arg GetMatc
 }
 
 const getMatchesByTournamentAndPlayer = `-- name: GetMatchesByTournamentAndPlayer :many
-SELECT match_id, tournament_id, player1_id, player2_id, match_date, round_name, lichess_round_id, lichess_game_id FROM matches WHERE tournament_id = $1 AND (player1_id = $2 OR player2_id = $2)
+SELECT match_id, tournament_id, player1_id, player2_id, match_date, round_name, lichess_round_id, lichess_game_id, match_result FROM matches WHERE tournament_id = $1 AND (player1_id = $2 OR player2_id = $2)
 `
 
 type GetMatchesByTournamentAndPlayerParams struct {
@@ -364,6 +380,7 @@ func (q *Queries) GetMatchesByTournamentAndPlayer(ctx context.Context, arg GetMa
 			&i.RoundName,
 			&i.LichessRoundID,
 			&i.LichessGameID,
+			&i.MatchResult,
 		); err != nil {
 			return nil, err
 		}
@@ -376,7 +393,7 @@ func (q *Queries) GetMatchesByTournamentAndPlayer(ctx context.Context, arg GetMa
 }
 
 const getPastMatchesByTournament = `-- name: GetPastMatchesByTournament :many
-SELECT match_id, tournament_id, player1_id, player2_id, match_date, round_name, lichess_round_id, lichess_game_id FROM matches WHERE tournament_id = $1 AND match_date < CURRENT_DATE
+SELECT match_id, tournament_id, player1_id, player2_id, match_date, round_name, lichess_round_id, lichess_game_id, match_result FROM matches WHERE tournament_id = $1 AND match_date < CURRENT_DATE
 `
 
 func (q *Queries) GetPastMatchesByTournament(ctx context.Context, tournamentID *int32) ([]Match, error) {
@@ -397,6 +414,7 @@ func (q *Queries) GetPastMatchesByTournament(ctx context.Context, tournamentID *
 			&i.RoundName,
 			&i.LichessRoundID,
 			&i.LichessGameID,
+			&i.MatchResult,
 		); err != nil {
 			return nil, err
 		}
@@ -409,7 +427,7 @@ func (q *Queries) GetPastMatchesByTournament(ctx context.Context, tournamentID *
 }
 
 const getUpcomingMatchesByTournament = `-- name: GetUpcomingMatchesByTournament :many
-SELECT match_id, tournament_id, player1_id, player2_id, match_date, round_name, lichess_round_id, lichess_game_id FROM matches WHERE tournament_id = $1 AND match_date > CURRENT_DATE
+SELECT match_id, tournament_id, player1_id, player2_id, match_date, round_name, lichess_round_id, lichess_game_id, match_result FROM matches WHERE tournament_id = $1 AND match_date > CURRENT_DATE
 `
 
 func (q *Queries) GetUpcomingMatchesByTournament(ctx context.Context, tournamentID *int32) ([]Match, error) {
@@ -430,6 +448,7 @@ func (q *Queries) GetUpcomingMatchesByTournament(ctx context.Context, tournament
 			&i.RoundName,
 			&i.LichessRoundID,
 			&i.LichessGameID,
+			&i.MatchResult,
 		); err != nil {
 			return nil, err
 		}
@@ -443,7 +462,7 @@ func (q *Queries) GetUpcomingMatchesByTournament(ctx context.Context, tournament
 
 const updateMatch = `-- name: UpdateMatch :one
 UPDATE matches SET tournament_id = $2, player1_id = $3, player2_id = $4,
- match_date = $5, round_name = $6, lichess_round_id = $7 WHERE match_id = $1 RETURNING match_id, tournament_id, player1_id, player2_id, match_date, round_name, lichess_round_id, lichess_game_id
+ match_date = $5, round_name = $6, lichess_round_id = $7, lichess_game_id = $8, match_result = $9 WHERE match_id = $1 RETURNING match_id, tournament_id, player1_id, player2_id, match_date, round_name, lichess_round_id, lichess_game_id, match_result
 `
 
 type UpdateMatchParams struct {
@@ -454,6 +473,8 @@ type UpdateMatchParams struct {
 	MatchDate      time.Time
 	RoundName      string
 	LichessRoundID string
+	LichessGameID  *string
+	MatchResult    *int32
 }
 
 func (q *Queries) UpdateMatch(ctx context.Context, arg UpdateMatchParams) (Match, error) {
@@ -465,6 +486,8 @@ func (q *Queries) UpdateMatch(ctx context.Context, arg UpdateMatchParams) (Match
 		arg.MatchDate,
 		arg.RoundName,
 		arg.LichessRoundID,
+		arg.LichessGameID,
+		arg.MatchResult,
 	)
 	var i Match
 	err := row.Scan(
@@ -476,6 +499,7 @@ func (q *Queries) UpdateMatch(ctx context.Context, arg UpdateMatchParams) (Match
 		&i.RoundName,
 		&i.LichessRoundID,
 		&i.LichessGameID,
+		&i.MatchResult,
 	)
 	return i, err
 }
