@@ -119,6 +119,10 @@ func (u *UseCase) createMatches(ctx context.Context, games []lichess.Game, round
 		})
 	}
 
+	if len(matchParams) == 0 {
+		return // No matches to create
+	}
+
 	_, err := u.q.CreateMatches(ctx, matchParams)
 	if err != nil {
 		slog.Error("Failed to create matches", slog.String("error", err.Error()))

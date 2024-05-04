@@ -37,8 +37,16 @@ func (u *UseCase) GetUpcomingMatchByTournament(ctx context.Context, tournamentID
 
 // storeMatchesByRound to store matches by round name.
 func storeMatchesByRound(matches []db.GetUpcomingMatchesByTournamentRow) [][]db.GetUpcomingMatchesByTournamentRow {
+	// Estimate the number of rounds
+	roundCount := 0
+	for i := 1; i < len(matches); i++ {
+		if matches[i].RoundName != matches[i-1].RoundName {
+			roundCount++
+		}
+	}
+
 	// Initialize a slice to store matches by round name
-	var matchesByRound [][]db.GetUpcomingMatchesByTournamentRow
+	matchesByRound := make([][]db.GetUpcomingMatchesByTournamentRow, 0, roundCount+1)
 
 	// Iterate through the matches and store them by round name
 	var currentRound string
