@@ -3,6 +3,7 @@ package page
 import "github.com/corentings/chessbet/app/views/layout"
 import "github.com/corentings/chessbet/domain"
 import 	db "github.com/corentings/chessbet/db/sqlc"
+import "strconv"
 
 
 templ Tournament(id string) {
@@ -33,20 +34,62 @@ templ TournamentComponent(tournament db.Tournament) {
 }
 
 templ MatchGallery(rounds [][]db.GetUpcomingMatchesByTournamentRow) {
-	<div> 
+	<container> 
 		for _, round := range rounds {
 			<h2>{round[0].RoundName}</h2>
-			<ul>
+			<div>
 				for _, match := range round {
-					<li>
-					{match.Name} vs {match.Name_2}
-					</li>
+					<div>
+					<style>
+					me {
+						display: flex;
+						flex-direction: column;
+						padding: 1rem;
+					}
+					</style>
+						@MatchComponent(match)
+					</div>
 				}
-			</ul>
+			</div>
 		}
-	</div>
+	</container>
 }
 
+templ MatchComponent(match db.GetUpcomingMatchesByTournamentRow) {
+        <div class="relay-game__players">
+					<div class="card" style="width: 20rem;">
+			<img src="https://picsum.photos/768" alt="Card example image"/>
+
+			<div class="card-body">
+				<h4 class="card-title">My awesome Paper card!</h4>
+				<h5 class="card-subtitle">Nice looking subtitle.</h5>
+				<p class="card-text">Notice that the card width in this example have been set to 20rem, otherwise it will try to fill the current container/row where the card is.</p>
+				<button>Let me go here!</button>
+			</div>
+			</div>
+            <card class="relay-game__player">
+                <span class="mini-game__user">
+					if match.ImageUrl != nil {
+
+                    <img class="mini-game__flag" src={*match.ImageUrl} />
+					}
+                    <span class="name">
+                        <span class="utitle">GM&nbsp;</span>{match.Name}  ({strconv.Itoa(int(match.Rating))})
+                    </span>
+                </span>
+            </card>
+            <card class="relay-game__player">
+                <span class="mini-game__user">
+					if match.ImageUrl_2 != nil {
+                    <img class="mini-game__flag" src={*match.ImageUrl_2} />
+					}
+                    <span class="name">
+                        <span class="utitle">GM&nbsp;</span>{match.Name_2}
+                    </span>
+                </span>
+            </card>
+        </div>
+}
 
 templ TournamentPage(title string,
     fromProtected bool,
