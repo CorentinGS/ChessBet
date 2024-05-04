@@ -4,9 +4,9 @@ go 1.22.1
 
 require (
 	github.com/a-h/templ v0.2.663
-	github.com/go-playground/validator/v10 v10.19.0
+	github.com/go-playground/validator/v10 v10.20.0
 	github.com/google/wire v0.6.0
-	github.com/labstack/echo/v4 v4.11.4
+	github.com/labstack/echo/v4 v4.12.0
 	github.com/pkg/errors v0.9.1
 	github.com/spf13/viper v1.18.2
 	golang.org/x/crypto v0.22.0
@@ -22,7 +22,7 @@ require (
 )
 
 require (
-	github.com/bytedance/gopkg v0.0.0-20240315062850-21fc7a1671a8
+	github.com/bytedance/gopkg v0.0.0-20240419070415-fefc805d4d2a
 	github.com/fsnotify/fsnotify v1.7.0 // indirect
 	github.com/gabriel-vasile/mimetype v1.4.3 // indirect
 	github.com/go-playground/locales v0.14.1 // indirect
