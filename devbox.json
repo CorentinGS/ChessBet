@@ -3,15 +3,15 @@
     "go@1.22.1",
     "hadolint@2.12.0",
     "air@1.51.0",
-    "templ@0.2.648",
-    "go-task@3.35.1",
+    "templ@latest",
+    "go-task@3.36.0",
     "wire@0.6.0",
     "gofumpt@0.6.0",
     "gotools@0.18.0",
-    "gci@0.13.1",
-    "golangci-lint@1.57.1",
+    "gci@0.13.4",
+    "golangci-lint@1.57.2",
     "sqlc@1.26.0",
-    "atlas@0.20.0"
+    "atlas@0.21.1"
   ],
   "env": {
     "GOPATH": "${workspaceRoot}",

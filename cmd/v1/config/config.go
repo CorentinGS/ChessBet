@@ -19,10 +19,10 @@ const (
 
 func GetConfigPath(isDevelopment bool) string {
 	if isDevelopment {
-		return "./cmd/v2/config/config-local"
+		return "./cmd/v1/config/config-local"
 	}
 
-	return "./cmd/v2/config/config-prod"
+	return "./cmd/v1/config/config-prod"
 }
 
 func IsProduction() bool {

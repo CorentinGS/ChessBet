@@ -28,7 +28,7 @@ tasks:
     deps:
       - task: generate
     cmds:
-      - go build -tags dev -o build/memnix ./cmd/v2/main.go
+      - go build -tags dev -o build/memnix ./cmd/v1/main.go
   clean:
     cmds:
       - rm -rf build
@@ -37,10 +37,10 @@ tasks:
       - gen
       - g
     generates:
-      - app/v2/views/**/*.go
+      - app/v1/views/**/*.go
       - assets/static/**/*.css
     sources:
-      - app/v2/views/**/*.templ
+      - app/v1/views/**/*.templ
       - tailwind.config.js
       - tailwind.css
       - assets/static/**/*.css
