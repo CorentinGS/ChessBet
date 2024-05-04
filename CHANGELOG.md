@@ -1,3 +1,36 @@
+## 1.0.0-a3 (2024-05-04)
+
+### ✨ Features
+
+- **matches**: display the upcoming matches by rounds
+
+### ⚡️ Performance
+
+- improve tournaments
+- improve tournaments
+
+### BREAKING CHANGE
+
+- moved main to ./cmd/v1 and changed major versions
+
+### fix
+
+- **deps**: update module github.com/go-playground/validator/v10 to v10.20.0
+- **deps**: update module github.com/bytedance/gopkg to v0.0.0-20240419070415-fefc805d4d2a
+- **deps**: update module github.com/labstack/echo/v4 to v4.12.0
+
+### 💄🚸 UI & UIX
+
+- **views**: link in tournament list
+
+### 💚👷 CI & Build
+
+- **templ**: build templ files
+
+### 📌➕⬇️ ➖⬆️  Dependencies
+
+- **golang**: update deps
+
 ## 1.0.0-a2 (2024-04-15)
 
 ### ✨ Features
