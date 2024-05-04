@@ -7,7 +7,7 @@ import (
 	"net/http"
 	"sync"
 
-	"github.com/corentings/chessbet/cmd/v2/config"
+	"github.com/corentings/chessbet/cmd/v1/config"
 	"github.com/corentings/chessbet/domain"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"

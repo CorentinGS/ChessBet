@@ -11,7 +11,7 @@ import (
 
 	"github.com/bytedance/gopkg/util/gctuner"
 	"github.com/corentings/chessbet/app"
-	"github.com/corentings/chessbet/cmd/v2/config"
+	"github.com/corentings/chessbet/cmd/v1/config"
 	"github.com/corentings/chessbet/infrastructures"
 	"github.com/corentings/chessbet/pkg/crypto"
 	"github.com/corentings/chessbet/pkg/jwt"
