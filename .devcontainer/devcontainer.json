@@ -5,16 +5,13 @@
 	// Or use a Dockerfile or Docker Compose file. More info: https://containers.dev/guide/dockerfile
 	"image": "mcr.microsoft.com/devcontainers/go:1-1.22-bookworm",
 	"features": {
-		"ghcr.io/devcontainers/features/python:1": {},
-		"ghcr.io/devcontainers-contrib/features/cz-cli:1": {},
 		"ghcr.io/eitsupi/devcontainer-features/go-task:1": {},
 		"ghcr.io/guiyomh/features/golangci-lint:0": {},
 		"ghcr.io/marcozac/devcontainer-features/atlas:1": {},
 		"ghcr.io/nucleuscloud/devcontainer-features/sqlc:1": {},
-		"ghcr.io/prulloac/devcontainer-features/commitizen:1": {},
-		"ghcr.io/prulloac/devcontainer-features/pre-commit:1": {},
-		"ghcr.io/dlouwers/devcontainer-features/devbox:1": {}
-	}
+		"ghcr.io/dusansimic/devcontainer-features/templ:0": {},
+		"ghcr.io/marcozac/devcontainer-features/gofumpt:1": {}
+	},
 
 	// Features to add to the dev container. More info: https://containers.dev/features.
 	// "features": {},
@@ -24,6 +21,7 @@
 
 	// Use 'postCreateCommand' to run commands after the container is created.
 	// "postCreateCommand": "go version",
+	"postCreateCommand": "go install github.com/cosmtrek/air@latest && go install github.com/dkorunic/betteralign/cmd/betteralign@latest && go install github.com/daixiang0/gci@latest"
 
 	// Configure tool-specific properties.
 	// "customizations": {},
