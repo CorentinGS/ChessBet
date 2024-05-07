@@ -6,8 +6,7 @@
   "packageRules": [
     {
       "matchUpdateTypes": ["minor", "patch", "pin", "digest", "rollback"],
-      "matchCurrentVersion": "!/^0/", 
       "automerge": true
-    },
+    }
   ]
 }
