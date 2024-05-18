@@ -1,3 +1,21 @@
+## 1.0.0-a4 (2024-05-07)
+
+### 💚👷 CI & Build
+
+- **devcontainer**: remove devbox for devcontainer
+
+### 📌➕⬇️ ➖⬆️  Dependencies
+
+- **gomod**: update deps
+
+### 🔥⚰️  Clean up
+
+- remove old assets
+
+### 🚀 Deployments
+
+- **docker**: fix dockerfile
+
 ## 1.0.0-a3 (2024-05-04)
 
 ### ✨ Features
