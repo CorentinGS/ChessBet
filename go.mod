@@ -22,7 +22,7 @@ require (
 )
 
 require (
-	github.com/bytedance/gopkg v0.0.0-20240711085056-a03554c296f8
+	github.com/bytedance/gopkg v0.0.0-20240802064923-4d9cac1af28c
 	github.com/fsnotify/fsnotify v1.7.0 // indirect
 	github.com/gabriel-vasile/mimetype v1.4.3 // indirect
 	github.com/go-playground/locales v0.14.1 // indirect
