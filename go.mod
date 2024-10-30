@@ -3,7 +3,7 @@ module github.com/corentings/chessbet
 go 1.22.1
 
 require (
-	github.com/a-h/templ v0.2.778
+	github.com/a-h/templ v0.2.793
 	github.com/go-playground/validator/v10 v10.22.1
 	github.com/google/wire v0.6.0
 	github.com/labstack/echo/v4 v4.12.0
