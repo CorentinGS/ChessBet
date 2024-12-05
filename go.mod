@@ -6,7 +6,7 @@ require (
 	github.com/a-h/templ v0.2.793
 	github.com/go-playground/validator/v10 v10.23.0
 	github.com/google/wire v0.6.0
-	github.com/labstack/echo/v4 v4.12.0
+	github.com/labstack/echo/v4 v4.13.0
 	github.com/pkg/errors v0.9.1
 	github.com/spf13/viper v1.19.0
 	golang.org/x/crypto v0.29.0
