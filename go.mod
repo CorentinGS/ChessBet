@@ -6,7 +6,7 @@ toolchain go1.24.0
 
 require (
 	github.com/a-h/templ v0.3.833
-	github.com/go-playground/validator/v10 v10.24.0
+	github.com/go-playground/validator/v10 v10.25.0
 	github.com/google/wire v0.6.0
 	github.com/labstack/echo/v4 v4.13.3
 	github.com/pkg/errors v0.9.1
