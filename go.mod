@@ -15,7 +15,7 @@ require (
 )
 
 require (
-	github.com/go-viper/mapstructure/v2 v2.2.1 // indirect
+	github.com/go-viper/mapstructure/v2 v2.3.0 // indirect
 	github.com/jackc/puddle/v2 v2.2.2 // indirect
 	github.com/rogpeppe/go-internal v1.12.0 // indirect
 	golang.org/x/sync v0.16.0 // indirect
