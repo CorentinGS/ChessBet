@@ -5,7 +5,7 @@ go 1.23.0
 toolchain go1.24.5
 
 require (
-	github.com/a-h/templ v0.3.920
+	github.com/a-h/templ v0.3.924
 	github.com/go-playground/validator/v10 v10.27.0
 	github.com/google/wire v0.6.0
 	github.com/labstack/echo/v4 v4.13.4
