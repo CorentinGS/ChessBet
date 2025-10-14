@@ -2,7 +2,7 @@ module github.com/corentings/chessbet
 
 go 1.24.0
 
-toolchain go1.25.2
+toolchain go1.25.3
 
 require (
 	github.com/a-h/templ v0.3.943
