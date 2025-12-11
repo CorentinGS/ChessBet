@@ -8,7 +8,7 @@ require (
 	github.com/a-h/templ v0.3.960
 	github.com/go-playground/validator/v10 v10.28.0
 	github.com/google/wire v0.7.0
-	github.com/labstack/echo/v4 v4.13.4
+	github.com/labstack/echo/v4 v4.14.0
 	github.com/pkg/errors v0.9.1
 	github.com/spf13/viper v1.21.0
 	golang.org/x/crypto v0.46.0
@@ -20,7 +20,7 @@ require (
 	github.com/rogpeppe/go-internal v1.12.0 // indirect
 	go.yaml.in/yaml/v3 v3.0.4 // indirect
 	golang.org/x/sync v0.19.0 // indirect
-	golang.org/x/time v0.11.0 // indirect
+	golang.org/x/time v0.14.0 // indirect
 )
 
 require (
@@ -47,7 +47,7 @@ require (
 	github.com/valyala/bytebufferpool v1.0.0 // indirect
 	github.com/valyala/fasttemplate v1.2.2 // indirect
 	go.uber.org/multierr v1.11.0 // indirect
-	golang.org/x/net v0.47.0 // indirect
+	golang.org/x/net v0.48.0 // indirect
 	golang.org/x/sys v0.39.0 // indirect
 	golang.org/x/text v0.32.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
